@@ -96,7 +96,7 @@ By default, violations of these rules will be displayed as errors. This may be o
 
 ## String IDs
 
-- `@basketry/rules/lib/string-id` - Requires that type properties named `id` must have be of type `string`
+- `@basketry/rules/lib/string-id` - Requires that type properties named `id` must be of type `string`
 
 ### Options
 
@@ -119,7 +119,7 @@ By default, violations of this rule will be displayed as errors. This may be ove
 
 ### Options
 
-By default, violations of these rules will be displayed as errors. This may be overridden with the `severity` option. This rule allows for both bare array and evelope object return types. By default, the payload is expected to be in a property called `value`, `values`, or `data`. These expectations may be overridded with the `payload` option. Note that other rules may enforce various pluralization requirements, to be sure to include both the plural and singular form of your payload name.
+By default, violations of these rules will be displayed as errors. This may be overridden with the `severity` option. This rule allows for both bare array and evelope object return types. By default, the payload is expected to be in a property called `value`, `values`, or `data`. These expectations may be overridded with the `payload` option. Note that other rules may enforce various pluralization requirements, so be sure to include both the plural and singular form of your payload name.
 
 ```json
 {
