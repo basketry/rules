@@ -21,8 +21,15 @@
     "prepack": "run-s build"
   },
   "keywords": [],
-  "author": "",
+  "author": "Steve Konves",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/basketry/rules.git"
+  },
+  "bugs": {
+    "url": "https://github.com/basketry/rules/issues"
+  },
   "files": [
     "lib"
   ],
