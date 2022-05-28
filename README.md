@@ -1,4 +1,5 @@
 [![main](https://github.com/basketry/rules/workflows/build/badge.svg?branch=main&event=push)](https://github.com/basketry/rules/actions?query=workflow%3Abuild+branch%3Amain+event%3Apush)
+[![master](https://img.shields.io/npm/v/@basketry/rules)](https://www.npmjs.com/package/@basketry/rules)
 
 # Basketry Rules
 
