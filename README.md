@@ -6,11 +6,13 @@ Common rules for building [Basketry](https://github.com/basketry/basketry) pipel
 
 ## Descriptions
 
-- `@basketry/rules/lib/method-description` - Requires all methods to have a description
-- `@basketry/rules/lib/parameter-description` - Requires all method parameters to have a description
-- `@basketry/rules/lib/property-description` - Requires all type properties to have a description
-- `@basketry/rules/lib/type-description` - Requires all types to have a description
-- `@basketry/rules/lib/description` - Combines all of the other description rules
+| Rule                                        |                                                      |
+| ------------------------------------------- | ---------------------------------------------------- |
+| `@basketry/rules/lib/method-description`    | Requires all methods to have a description           |
+| `@basketry/rules/lib/parameter-description` | Requires all method parameters to have a description |
+| `@basketry/rules/lib/property-description`  | Requires all type properties to have a description   |
+| `@basketry/rules/lib/type-description`      | Requires all types to have a description             |
+| `@basketry/rules/lib/description`           | Combines all of the other description rules          |
 
 ### Options
 
@@ -29,7 +31,9 @@ By default, violations of these rules will be displayed as errors. This may be o
 
 ## Array parameter length
 
-- `@basketry/rules/lib/array-parameter-length` - Requires method array-typed parameters to specify max item lengths.
+| Rule                                         |                                                                     |
+| -------------------------------------------- | ------------------------------------------------------------------- |
+| `@basketry/rules/lib/array-parameter-length` | Requires method array-typed parameters to specify max item lengths. |
 
 ### Options
 
@@ -48,13 +52,15 @@ By default, violations of this rule will be displayed as errors. This may be ove
 
 ## HTTP status codes
 
-- `@basketry/rules/lib/http-delete-status` - Requires that HTTP DELETE status codes must be `200`, `202`, or `204`
-- `@basketry/rules/lib/http-get-status` - Requires that HTTP GET status codes must be `200`, `204`, or `206`
-- `@basketry/rules/lib/http-patch-status` - Requires that HTTP PATCH status codes must be `200`, `202`, or `204`
-- `@basketry/rules/lib/http-post-status` - Requires that HTTP POST status codes must be `200`, `201`, `202`, or `204`
-- `@basketry/rules/lib/http-put-status` - Requires that HTTP PUT status codes must be `200`, `201`, `202`, or `204`
-- `@basketry/rules/lib/http-no-content-status` - Requires methods with no return type return status code of `204` AND that methods that do return data do not return `204`
-- `@basketry/rules/lib/http-status` - Combines all of the other HTTP status code rules
+| Rule                                         |                                                                                                                           |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `@basketry/rules/lib/http-delete-status`     | Requires that HTTP DELETE status codes must be `200`, `202`, or `204`                                                     |
+| `@basketry/rules/lib/http-get-status`        | Requires that HTTP GET status codes must be `200`, `204`, or `206`                                                        |
+| `@basketry/rules/lib/http-patch-status`      | Requires that HTTP PATCH status codes must be `200`, `202`, or `204`                                                      |
+| `@basketry/rules/lib/http-post-status`       | Requires that HTTP POST status codes must be `200`, `201`, `202`, or `204`                                                |
+| `@basketry/rules/lib/http-put-status`        | Requires that HTTP PUT status codes must be `200`, `201`, `202`, or `204`                                                 |
+| `@basketry/rules/lib/http-no-content-status` | Requires methods with no return type return status code of `204` AND that methods that do return data do not return `204` |
+| `@basketry/rules/lib/http-status`            | Combines all of the other HTTP status code rules                                                                          |
 
 ### Options
 
@@ -73,8 +79,10 @@ By default, violations of these rules will be displayed as errors. This may be o
 
 ## Pagination
 
-- `@basketry/rules/lib/offset-pagination` - Requires methods that return arrays provide `offest` and `limit` paremters
-- `@basketry/rules/lib/relay-pagination` - Requires methods that return arrays provide `first`, `after`, `last`, and `before` paremters
+| Rule                                    |                                                                                              |
+| --------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `@basketry/rules/lib/offset-pagination` | Requires methods that return arrays provide `offest` and `limit` paremters                   |
+| `@basketry/rules/lib/relay-pagination`  | Requires methods that return arrays provide `first`, `after`, `last`, and `before` paremters |
 
 ### Options
 
@@ -96,7 +104,9 @@ By default, violations of these rules will be displayed as errors. This may be o
 
 ## String IDs
 
-- `@basketry/rules/lib/string-id` - Requires that type properties named `id` must be of type `string`
+| Rule                            |                                                                   |
+| ------------------------------- | ----------------------------------------------------------------- |
+| `@basketry/rules/lib/string-id` | Requires that type properties named `id` must be of type `string` |
 
 ### Options
 
@@ -115,7 +125,9 @@ By default, violations of this rule will be displayed as errors. This may be ove
 
 ## Reponse envelops
 
-- `@basketry/rules/lib/response-envelope` - Requires that all methods return envelope objects that contain both an `errors` array and a payload property.
+| Rule                                    |                                                                                                               |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `@basketry/rules/lib/response-envelope` | Requires that all methods return envelope objects that contain both an `errors` array and a payload property. |
 
 ### Options
 
@@ -137,9 +149,11 @@ By default, violations of these rules will be displayed as errors. This may be o
 
 ## Pluralization
 
-- `@basketry/rules/lib/parameter-pluralization` - Requires that array parameters have pluralized names and non-array parameters have singular names.
-- `@basketry/rules/lib/property-pluralization` - Requires that array properties have pluralized names and non-array properties have singular names.
-- `@basketry/rules/lib/pluralization` - Combines all of the other pluralization rules
+| Rule                                          |                                                                                                    |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `@basketry/rules/lib/parameter-pluralization` | Requires that array parameters have pluralized names and non-array parameters have singular names. |
+| `@basketry/rules/lib/property-pluralization`  | Requires that array properties have pluralized names and non-array properties have singular names. |
+| `@basketry/rules/lib/pluralization`           | Combines all of the other pluralization rules                                                      |
 
 ### Options
 
