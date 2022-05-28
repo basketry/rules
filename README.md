@@ -123,7 +123,7 @@ By default, violations of this rule will be displayed as errors. This may be ove
 }
 ```
 
-## Reponse envelops
+## Response envelopes
 
 | Rule                                    |                                                                                                               |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
