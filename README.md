@@ -171,6 +171,69 @@ By default, violations of this rule will be displayed as errors. This may be ove
 }
 ```
 
+## Casing
+
+| Rule                         |                                                                     |
+| ---------------------------- | ------------------------------------------------------------------- |
+| `@basketry/rules/lib/casing` | Defines casing requirements for the various parts of a service |
+
+### Options
+
+Casing values must be one of the following:
+
+- `snake` - eg. some_item_name
+- `pascal` - eg. SomeItemName
+- `camel` - eg. someItemName
+- `kebab` - eg. some-item-name
+- `header` - eg. Some-Item-Name
+- `constant'` - eg. SOME_ITEM_NAME
+
+Any other casing value will be silently ignored.
+
+The following opitons may be used to enforcing casing rules within the service:
+
+- `enum`
+- `enumValue`
+- `path`
+- `method`
+- `parameter`
+- `query`
+- `header`
+- `property`
+- `type`
+
+Note that if `query` or `header` are supplied when `parameter` is _also_ supplied, then the more specific rules for headers and query parameters will override the setting for all other parameters. If `query` or `header` are _not_ supplied, the the value for `parameter` will also be used for headers and query parameters.
+
+By default, violations of this rule will be displayed as errors. This may be overridden with the `severity` option.
+
+```json
+{
+  "rules": [
+    {
+      "rule": "@basketry/rules/lib/casing",
+      "options": {
+        "severity": "warning",
+        "enum": "camel",
+        "enumValue": "constant",
+        "path": "kabab",
+        "method": "camel",
+        "parameter": "camel",
+        "query": "kabab",
+        "header": "header",
+        "property": "camel",
+        "type": "camel"
+      }
+    }
+  ]
+}
+```
+
+If a casing rule is not specified for a particular element, then any casing will be allowed. There are no default values.
+
+Warning: changing the casing for enum values, paths, query parameters, and properties is a breaking change for HTTP (aka RESTful) services because those values are passed directly in the HTTP request or response. Query parameters are not technically case-sensitive. Enum, method, and type names are never included in HTTP traffic.
+
+Also note that various Generators may emit code that is idiomatic to a particular language regardless of these casing rules; however, all generated code MUST send and receive values in the specified casing when communicating over service boundaries and/or respect the casing requirements of the protocol with which they do so.
+
 ---
 
 Generated with [generator-ts-console](https://www.npmjs.com/package/generator-ts-console)
