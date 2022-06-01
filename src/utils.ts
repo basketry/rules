@@ -1,13 +1,13 @@
-import {
-  decodeRange,
-  getTypeByName,
-  isRequired,
-  methodRule,
-  ReturnType,
-  Service,
-  Severity,
-} from 'basketry';
-import { snake } from 'case';
+import { getTypeByName, ReturnType, Service, Severity } from 'basketry';
+import { camel, constant, header, kebab, pascal, snake } from 'case';
+
+export type Casing =
+  | 'snake'
+  | 'pascal'
+  | 'camel'
+  | 'kebab'
+  | 'header'
+  | 'constant';
 
 export function parseSeverity(
   input: any,
@@ -20,6 +20,39 @@ export function parseSeverity(
       return input;
     default:
       return fallback;
+  }
+}
+
+export function parseCasing(casing: any): Casing | undefined {
+  switch (casing) {
+    case 'snake':
+    case 'pascal':
+    case 'camel':
+    case 'kebab':
+    case 'header':
+    case 'constant':
+      return casing;
+    default:
+      return undefined;
+  }
+}
+
+export function applyCasing(input: string, casing: Casing | undefined): string {
+  switch (casing) {
+    case 'snake':
+      return snake(input);
+    case 'pascal':
+      return pascal(input);
+    case 'camel':
+      return camel(input);
+    case 'kebab':
+      return kebab(input);
+    case 'header':
+      return header(input);
+    case 'constant':
+      return constant(input);
+    default:
+      return input;
   }
 }
 
