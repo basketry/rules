@@ -173,8 +173,8 @@ By default, violations of this rule will be displayed as errors. This may be ove
 
 ## Casing
 
-| Rule                         |                                                                     |
-| ---------------------------- | ------------------------------------------------------------------- |
+| Rule                         |                                                                |
+| ---------------------------- | -------------------------------------------------------------- |
 | `@basketry/rules/lib/casing` | Defines casing requirements for the various parts of a service |
 
 ### Options
