@@ -18,7 +18,7 @@ describe('basketry/offset-pagination', () => {
     const returnType = build.returnType({
       typeName: { value: 'widget' },
       isArray: false,
-      isLocal: true,
+      isPrimitive: false,
     });
     const type = build.type({
       properties: [build.property({ name: { value: 'id' } })],
@@ -54,7 +54,7 @@ describe('basketry/offset-pagination', () => {
     const returnType = build.returnType({
       typeName: { value: 'widget' },
       isArray: true,
-      isLocal: true,
+      isPrimitive: false,
     });
     const type = build.type({
       properties: [build.property({ name: { value: 'id' } })],
@@ -115,7 +115,7 @@ describe('basketry/offset-pagination', () => {
     const returnType = build.returnType({
       typeName: { value: 'envelope' },
       isArray: false,
-      isLocal: true,
+      isPrimitive: false,
     });
     const envelope = build.envelope({ isArray: true });
 
@@ -174,7 +174,7 @@ describe('basketry/offset-pagination', () => {
     const returnType = build.returnType({
       typeName: { value: 'envelope' },
       isArray: false,
-      isLocal: true,
+      isPrimitive: false,
     });
     const envelope = build.envelope({ isArray: false });
 

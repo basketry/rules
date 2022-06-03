@@ -54,38 +54,35 @@ export function returnType(defaults: Partial<ReturnType> = {}): ReturnType {
   return {
     typeName: { value: 'string' },
     isArray: false,
-    isLocal: false,
-    isUnknown: false,
+    isPrimitive: true,
     rules: [],
     loc: '1;1;0',
     ...defaults,
-  };
+  } as ReturnType;
 }
 
 export function property(defaults: Partial<Property> = {}): Property {
   return {
     name: { value: 'prop' },
     isArray: false,
-    isLocal: false,
-    isUnknown: false,
+    isPrimitive: true,
     rules: [],
     typeName: { value: 'string' },
     loc: '1;1;0',
     ...defaults,
-  };
+  } as Property;
 }
 
 export function parameter(defaults: Partial<Parameter> = {}): Parameter {
   return {
     name: { value: 'param' },
     isArray: false,
-    isLocal: false,
-    isUnknown: false,
+    isPrimitive: true,
     rules: [],
     typeName: { value: 'string' },
     loc: '1;1;0',
     ...defaults,
-  };
+  } as Parameter;
 }
 
 export function service(defaults: Partial<Service> = {}): Service {
