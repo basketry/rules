@@ -10,6 +10,7 @@ const propertyDescriptionRule = propertyRule(
         range: decodeRange(property.loc),
         severity: parseSeverity(options?.severity),
         sourcePath,
+        link: 'https://github.com/basketry/rules#descriptions',
       };
     }
 

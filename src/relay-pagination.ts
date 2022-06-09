@@ -96,6 +96,7 @@ const relayPaginationRule = methodRule(
         range: decodeRange(method.loc),
         severity: parseSeverity(options?.severity),
         sourcePath,
+        link: 'https://github.com/basketry/rules#pagination',
       };
     }
 

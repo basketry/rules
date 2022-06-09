@@ -11,6 +11,7 @@ import { parseSeverity } from './utils';
 addUncountableRule(/data$/);
 
 const code = 'basketry/property-pluralization';
+const link = 'https://github.com/basketry/rules#pluralization';
 
 const propertyPlurlaizationRule = propertyRule(
   ({ type, property, sourcePath, options }) => {
@@ -26,6 +27,7 @@ const propertyPlurlaizationRule = propertyRule(
         range: decodeRange(property.name.loc),
         severity: parseSeverity(options?.severity),
         sourcePath,
+        link,
       };
     } else if (
       !property.isArray &&
@@ -39,6 +41,7 @@ const propertyPlurlaizationRule = propertyRule(
         range: decodeRange(property.name.loc),
         severity: parseSeverity(options?.severity),
         sourcePath,
+        link,
       };
     }
 

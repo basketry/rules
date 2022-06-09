@@ -10,6 +10,7 @@ const parameterDescriptionRule = parameterRule(
         range: decodeRange(parameter.loc),
         severity: parseSeverity(options?.severity),
         sourcePath,
+        link: 'https://github.com/basketry/rules#descriptions',
       };
     }
 

@@ -20,6 +20,7 @@ const httpNoContentStatusRule = methodRule(
         range: decodeRange(httpMethod.successCode.loc || httpMethod.loc),
         severity: parseSeverity(options?.severity),
         sourcePath,
+        link: 'https://github.com/basketry/rules#http-status-codes',
       };
     }
 

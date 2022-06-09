@@ -9,6 +9,7 @@ const stringIdRule = propertyRule(({ property, sourcePath, options }) => {
       range: decodeRange(property.loc),
       severity: parseSeverity(options?.severity),
       sourcePath,
+      link: 'https://github.com/basketry/rules#string-ids',
     };
   }
 

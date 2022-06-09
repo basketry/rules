@@ -5,6 +5,7 @@ import { parseSeverity } from './utils';
 addUncountableRule(/data$/);
 
 const code = 'basketry/parameter-pluralization';
+const link = 'https://github.com/basketry/rules#pluralization';
 
 const parameterPlurlaizationRule = parameterRule(
   ({ method, parameter, sourcePath, options }) => {
@@ -20,6 +21,7 @@ const parameterPlurlaizationRule = parameterRule(
         range: decodeRange(parameter.name.loc),
         severity: parseSeverity(options?.severity),
         sourcePath,
+        link,
       };
     } else if (
       !parameter.isArray &&
@@ -33,6 +35,7 @@ const parameterPlurlaizationRule = parameterRule(
         range: decodeRange(parameter.name.loc),
         severity: parseSeverity(options?.severity),
         sourcePath,
+        link,
       };
     }
 

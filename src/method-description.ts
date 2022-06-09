@@ -9,6 +9,7 @@ const methodDescriptionRule = methodRule(({ method, sourcePath, options }) => {
       range: decodeRange(method.loc),
       severity: parseSeverity(options?.severity),
       sourcePath,
+      link: 'https://github.com/basketry/rules#descriptions',
     };
   }
 

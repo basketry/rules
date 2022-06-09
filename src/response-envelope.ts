@@ -30,6 +30,7 @@ const responseEnvelopeRule = methodRule(
         range: decodeRange(method.returnType.loc),
         severity: parseSeverity(options?.severity),
         sourcePath,
+        link: 'https://github.com/basketry/rules#response-envelopes',
       };
     }
 

@@ -12,6 +12,8 @@ import {
 } from 'basketry';
 import { applyCasing, parseCasing, parseSeverity } from './utils';
 
+const link = 'https://github.com/basketry/rules#casing';
+
 const casingRule: Rule = (service, sourcePath, options) => {
   const violations: Violation[] = [];
 
@@ -28,6 +30,7 @@ const casingRule: Rule = (service, sourcePath, options) => {
           range: decodeRange(name.loc),
           severity: parseSeverity(options?.severity),
           sourcePath,
+          link,
         });
       }
     }
@@ -44,6 +47,7 @@ const casingRule: Rule = (service, sourcePath, options) => {
           range: decodeRange(value.loc),
           severity: parseSeverity(options?.severity),
           sourcePath,
+          link,
         });
       }
     }
@@ -69,6 +73,7 @@ const casingRule: Rule = (service, sourcePath, options) => {
             range: decodeRange(path.loc),
             severity: parseSeverity(options?.severity),
             sourcePath,
+            link,
           });
         }
       }
@@ -88,6 +93,7 @@ const casingRule: Rule = (service, sourcePath, options) => {
           range: decodeRange(name.loc),
           severity: parseSeverity(options?.severity),
           sourcePath,
+          link,
         });
       }
     }
@@ -110,6 +116,7 @@ const casingRule: Rule = (service, sourcePath, options) => {
           range: decodeRange(name.loc),
           severity: parseSeverity(options?.severity),
           sourcePath,
+          link,
         });
       }
     }
@@ -131,6 +138,7 @@ const casingRule: Rule = (service, sourcePath, options) => {
           range: decodeRange(name.loc),
           severity: parseSeverity(options?.severity),
           sourcePath,
+          link,
         });
       }
     }
@@ -152,6 +160,7 @@ const casingRule: Rule = (service, sourcePath, options) => {
           range: decodeRange(name.loc),
           severity: parseSeverity(options?.severity),
           sourcePath,
+          link,
         });
       }
     }
@@ -170,6 +179,7 @@ const casingRule: Rule = (service, sourcePath, options) => {
           range: decodeRange(name.loc),
           severity: parseSeverity(options?.severity),
           sourcePath,
+          link,
         });
       }
     }
@@ -188,6 +198,7 @@ const casingRule: Rule = (service, sourcePath, options) => {
           range: decodeRange(name.loc),
           severity: parseSeverity(options?.severity),
           sourcePath,
+          link,
         });
       }
     }

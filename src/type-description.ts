@@ -9,6 +9,7 @@ const typeDescriptionRule = typeRule(({ type, sourcePath, options }) => {
       range: decodeRange(type.loc),
       severity: parseSeverity(options?.severity),
       sourcePath,
+      link: 'https://github.com/basketry/rules#descriptions',
     };
   }
 

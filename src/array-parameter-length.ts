@@ -13,6 +13,7 @@ const arrayParameterLengthRule = parameterRule(
         range: decodeRange(parameter.name.loc),
         severity: parseSeverity(options?.severity),
         sourcePath,
+        link: 'https://github.com/basketry/rules#array-parameter-length',
       };
     }
 

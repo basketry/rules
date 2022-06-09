@@ -280,4 +280,5 @@ const violation = (): Violation => ({
   },
   severity: 'error',
   sourcePath: 'test.ext',
+  link: 'https://github.com/basketry/rules#pagination',
 });
