@@ -10,9 +10,11 @@ import {
 export function envelope({
   isArray,
   payload = 'data',
+  extraProperties,
 }: {
   isArray: boolean;
   payload?: string;
+  extraProperties?: Property[];
 }): Type {
   return type({
     name: { value: 'envelope' },
@@ -20,11 +22,14 @@ export function envelope({
       property({
         name: { value: 'errors' },
         isArray: true,
+        isPrimitive: false,
       }),
       property({
         name: { value: payload },
         isArray,
+        isPrimitive: false,
       }),
+      ...(extraProperties || []),
     ],
   });
 }
@@ -93,6 +98,7 @@ export function service(defaults: Partial<Service> = {}): Service {
     interfaces: [],
     types: [],
     enums: [],
+    unions: [],
     loc: '1;1;0',
     ...defaults,
   };

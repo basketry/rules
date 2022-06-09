@@ -60,7 +60,7 @@ describe('basketry/relay-pagination', () => {
       properties: [build.property({ name: { value: 'id' } })],
     });
 
-    it('returns an empty array if paging parameters are supplied', () => {
+    it('returns a violation even if paging parameters are supplied', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
@@ -82,7 +82,7 @@ describe('basketry/relay-pagination', () => {
       const violations = relayPaginationRule(ir, 'test.ext');
 
       // ASSERT
-      expect(violations).toEqual([]);
+      expect(violations).toEqual([violation()]);
     });
 
     it('returns a violation if paging parameters are not supplied', () => {
@@ -117,9 +117,43 @@ describe('basketry/relay-pagination', () => {
       isArray: false,
       isPrimitive: false,
     });
-    const envelope = build.envelope({ isArray: true });
+    const pageInfo = build.type({
+      name: { value: 'pageInfo' },
+      properties: [
+        build.property({
+          name: { value: 'hasPreviousPage' },
+          typeName: { value: 'boolean' },
+          isPrimitive: true,
+        }),
+        build.property({
+          name: { value: 'hasNextPage' },
+          typeName: { value: 'boolean' },
+          isPrimitive: true,
+        }),
+        build.property({
+          name: { value: 'startCursor' },
+          typeName: { value: 'string' },
+          isPrimitive: true,
+        }),
+        build.property({
+          name: { value: 'endCursor' },
+          typeName: { value: 'string' },
+          isPrimitive: true,
+        }),
+      ],
+    });
+    const envelope = build.envelope({
+      isArray: true,
+      extraProperties: [
+        build.property({
+          name: { value: 'pageInfo' },
+          typeName: { value: 'pageInfo' },
+          isPrimitive: false,
+        }),
+      ],
+    });
 
-    it('returns an empty array if paging parameters are supplied', () => {
+    it('returns an empty array if paging parameters are supplied and page info is returned', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
@@ -134,7 +168,7 @@ describe('basketry/relay-pagination', () => {
             protocols: { http: [] },
           },
         ],
-        types: [envelope],
+        types: [envelope, pageInfo],
       });
 
       // ACT
@@ -231,7 +265,7 @@ const paginationParams = (): Parameter[] => [
 const violation = (): Violation => ({
   code: 'basketry/relay-pagination',
   message:
-    'Method "method" must define optional relay pagination parameters: first, after, last, and after.',
+    'Method "method" must define optional relay pagination parameters and return a "page info" object.',
   range: {
     end: {
       column: 1,
