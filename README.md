@@ -80,14 +80,16 @@ By default, violations of these rules will be displayed as errors. This may be o
 
 ## Pagination
 
-| Rule                                    |                                                                                              |
-| --------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `@basketry/rules/lib/offset-pagination` | Requires methods that return arrays provide `offest` and `limit` paremters                   |
-| `@basketry/rules/lib/relay-pagination`  | Requires methods that return arrays provide `first`, `after`, `last`, and `before` paremters |
+| Rule                                    |                                                                                                                                                                                                                                                        |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `@basketry/rules/lib/offset-pagination` | Requires methods that return arrays define `offest` and `limit` paremters                                                                                                                                                                              |
+| `@basketry/rules/lib/relay-pagination`  | Requires methods that return arrays define [Relay-style pagination paremters](https://relay.dev/graphql/connections.htm#sec-Arguments) and also return a ["page info"](https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo.Fields) object |
 
 ### Options
 
 By default, violations of these rules will be displayed as errors. This may be overridden with the `severity` option. This rule allows for both bare array and evelope object return types. By default, the payload is expected to be in a property called `value`, `values`, or `data`. These expectations may be overridded with the `payload` option.
+
+If there is HTTP protocol information defined for this method, then the rules is only applied to HTTP GET methods. This may be overridden with the `verb` or `verbs` option.
 
 ```json
 {
@@ -96,7 +98,8 @@ By default, violations of these rules will be displayed as errors. This may be o
       "rule": "@basketry/rules/lib/offset-pagination",
       "options": {
         "severity": "warning",
-        "payload": ["result", "results"]
+        "payload": ["result", "results"],
+        "verbs": ["GET", "POST"]
       }
     }
   ]
