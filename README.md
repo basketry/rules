@@ -106,6 +106,36 @@ If there is HTTP protocol information defined for this method, then the rules ar
 }
 ```
 
+To apply the rule selectively, use an `allow`/`deny` list with method names.
+
+In the following example, the rule will only be enforced on `myPaginatedMethod`. The pagination rule _will not_ be enforced on any method _not_ in the `allow` list.
+
+```json
+{
+  "rules": [
+    {
+      "rule": "@basketry/rules/lib/offset-pagination",
+      "options": { "allow": ["myPaginatedMethod"] }
+    }
+  ]
+}
+```
+
+In the following example, the rule will not be enforced on `myUnpaginatedMethod`. The pagination rule _will_ be enforced on all methods _not_ in the `deny` list.
+
+```json
+{
+  "rules": [
+    {
+      "rule": "@basketry/rules/lib/offset-pagination",
+      "options": { "deny": ["myUnpaginatedMethod"] }
+    }
+  ]
+}
+```
+
+Simultaneous usage of both `allow` and `deny` lists may lead to unpredictable results.
+
 ## String IDs
 
 | Rule                            |                                                                   |
