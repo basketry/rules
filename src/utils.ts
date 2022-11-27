@@ -89,3 +89,15 @@ function getAllowedPayloadProps(input: any): string[] {
   if (!input) return Array.from(allowedPayloadProps);
   return Array.isArray(input) ? input.map((x) => snake(`${x}`)) : [`${input}`];
 }
+
+export function getList(maybeArray: any): Set<string> | undefined {
+  if (Array.isArray(maybeArray)) {
+    return new Set(
+      (maybeArray as any[])
+        .filter((x: any): x is string => typeof x === 'string')
+        .map((x) => snake(x)),
+    );
+  } else {
+    return undefined;
+  }
+}

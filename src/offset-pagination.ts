@@ -1,9 +1,15 @@
 import { decodeRange, isRequired, methodRule } from 'basketry';
 import { snake } from 'case';
-import { isArrayPayload, parseSeverity } from './utils';
+import { getList, isArrayPayload, parseSeverity } from './utils';
 
 const offsetPaginationRule = methodRule(
   ({ method, httpMethod, service, sourcePath, options }) => {
+    const allowList = getList(options?.allow);
+    if (allowList && !allowList.has(snake(method.name.value))) return;
+
+    const denyList = getList(options?.deny);
+    if (denyList && denyList.has(snake(method.name.value))) return;
+
     const verbs = options?.verb || options?.verbs || 'get';
     const allow =
       !httpMethod?.verb ||
