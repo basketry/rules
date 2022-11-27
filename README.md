@@ -87,9 +87,9 @@ By default, violations of these rules will be displayed as errors. This may be o
 
 ### Options
 
-By default, violations of these rules will be displayed as errors. This may be overridden with the `severity` option. This rule allows for both bare array and evelope object return types. By default, the payload is expected to be in a property called `value`, `values`, or `data`. These expectations may be overridded with the `payload` option.
+By default, violations of these rules will be displayed as errors. This may be overridden with the `severity` option. This rule allows for both bare array and envelope object return types. By default, the payload is expected to be in a property called `value`, `values`, or `data`. These expectations may be overridden with the `payload` option.
 
-If there is HTTP protocol information defined for this method, then the rules is only applied to HTTP GET methods. This may be overridden with the `verb` or `verbs` option.
+If there is HTTP protocol information defined for this method, then the rules are only applied to HTTP GET methods. This may be overridden with the `verb` or `verbs` option.
 
 ```json
 {
