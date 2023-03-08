@@ -185,6 +185,7 @@ By default, violations of these rules will be displayed as errors. This may be o
 
 | Rule                                          |                                                                                                    |
 | --------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `@basketry/rules/lib/enum-pluralization`      | Requires that enums have singular names.                                                           |
 | `@basketry/rules/lib/parameter-pluralization` | Requires that array parameters have pluralized names and non-array parameters have singular names. |
 | `@basketry/rules/lib/property-pluralization`  | Requires that array properties have pluralized names and non-array properties have singular names. |
 | `@basketry/rules/lib/pluralization`           | Combines all of the other pluralization rules                                                      |
