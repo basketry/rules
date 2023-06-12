@@ -14,7 +14,7 @@ const code = 'basketry/property-pluralization';
 const link = 'https://github.com/basketry/rules#pluralization';
 
 const propertyPlurlaizationRule = propertyRule(
-  ({ type, property, sourcePath, options }) => {
+  ({ service, type, property, options }) => {
     if (
       property.isArray &&
       property.name.value !== plural(property.name.value)
@@ -26,7 +26,7 @@ const propertyPlurlaizationRule = propertyRule(
         }") is an array and must be named "${plural(property.name.value)}"`,
         range: decodeRange(property.name.loc),
         severity: parseSeverity(options?.severity),
-        sourcePath,
+        sourcePath: service.sourcePath,
         link,
       };
     } else if (
@@ -40,7 +40,7 @@ const propertyPlurlaizationRule = propertyRule(
         }") is an array and must be named "${singular(property.name.value)}"`,
         range: decodeRange(property.name.loc),
         severity: parseSeverity(options?.severity),
-        sourcePath,
+        sourcePath: service.sourcePath,
         link,
       };
     }

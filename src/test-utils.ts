@@ -36,6 +36,7 @@ export function envelope({
 
 export function method(defaults: Partial<Method> = {}): Method {
   return {
+    kind: 'Method',
     name: { value: 'method' },
     security: [],
     returnType: undefined,
@@ -47,6 +48,7 @@ export function method(defaults: Partial<Method> = {}): Method {
 
 export function type(defaults: Partial<Type> = {}): Type {
   return {
+    kind: 'Type',
     name: { value: 'type' },
     properties: [],
     rules: [],
@@ -92,9 +94,11 @@ export function parameter(defaults: Partial<Parameter> = {}): Parameter {
 
 export function service(defaults: Partial<Service> = {}): Service {
   return {
-    basketry: '1',
+    kind: 'Service',
+    basketry: '1.1-rc',
     title: { value: 'test' },
     majorVersion: { value: 1 },
+    sourcePath: 'test.ext',
     interfaces: [],
     types: [],
     enums: [],

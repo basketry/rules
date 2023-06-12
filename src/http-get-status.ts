@@ -3,7 +3,7 @@ import { parseSeverity } from './utils';
 
 const allowedCodes = new Set([200, 204, 206]);
 
-const httpGetStatusRule = methodRule(({ httpMethod, sourcePath, options }) => {
+const httpGetStatusRule = methodRule(({ service, httpMethod, options }) => {
   if (!httpMethod) return;
 
   if (
@@ -17,7 +17,7 @@ const httpGetStatusRule = methodRule(({ httpMethod, sourcePath, options }) => {
       }" must be one of the following: ${Array.from(allowedCodes).join(', ')}.`,
       range: decodeRange(httpMethod.successCode.loc || httpMethod.loc),
       severity: parseSeverity(options?.severity),
-      sourcePath,
+      sourcePath: service.sourcePath,
       link: 'https://github.com/basketry/rules#http-status-codes',
     };
   }

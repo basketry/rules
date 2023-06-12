@@ -3,7 +3,7 @@ import { snake } from 'case';
 import { getList, isArrayPayload, parseSeverity } from './utils';
 
 const offsetPaginationRule = methodRule(
-  ({ method, httpMethod, service, sourcePath, options }) => {
+  ({ method, httpMethod, service, options }) => {
     const allowList = getList(options?.allow);
     if (allowList && !allowList.has(snake(method.name.value))) return;
 
@@ -41,7 +41,7 @@ const offsetPaginationRule = methodRule(
         message: `Method "${method.name.value}" must define optional integer offset and limit parameters.`,
         range: decodeRange(method.loc),
         severity: parseSeverity(options?.severity),
-        sourcePath,
+        sourcePath: service.sourcePath,
         link: 'https://github.com/basketry/rules#pagination',
       };
     }

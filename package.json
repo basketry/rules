@@ -1,6 +1,6 @@
 {
   "name": "@basketry/rules",
-  "version": "0.0.11",
+  "version": "0.1.0-rc.0",
   "description": "Common rules for building Basketry pipelines",
   "main": "./lib/index.js",
   "scripts": {
@@ -47,7 +47,7 @@
     "typescript": "^4.6.4"
   },
   "dependencies": {
-    "basketry": "^0.0.22",
+    "basketry": "^0.1.0-rc.3",
     "case": "^1.6.3",
     "pluralize": "^8.0.0"
   }

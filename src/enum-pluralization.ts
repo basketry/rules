@@ -8,14 +8,14 @@ const code = 'basketry/enum-pluralization';
 const link = 'https://github.com/basketry/rules#pluralization';
 
 const enumPlurlaizationRule = enumRule(
-  ({ enum: { name }, sourcePath, options }) => {
+  ({ service, enum: { name }, options }) => {
     if (name.value !== singular(name.value)) {
       return {
         code,
         message: `Enum name should be singular: "${singular(name.value)}"`,
         range: decodeRange(name.loc),
         severity: parseSeverity(options?.severity),
-        sourcePath,
+        sourcePath: service.sourcePath,
         link,
       };
     }

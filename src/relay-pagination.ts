@@ -9,7 +9,7 @@ import { camel, snake } from 'case';
 import { getList, isArrayPayload, parseSeverity } from './utils';
 
 const relayPaginationRule = methodRule(
-  ({ method, httpMethod, service, sourcePath, options }) => {
+  ({ method, httpMethod, service, options }) => {
     const allowList = getList(options?.allow);
     if (allowList && !allowList.has(snake(method.name.value))) return;
 
@@ -101,7 +101,7 @@ const relayPaginationRule = methodRule(
         message: `Method "${method.name.value}" must define optional relay pagination parameters and return a "page info" object.`,
         range: decodeRange(method.loc),
         severity: parseSeverity(options?.severity),
-        sourcePath,
+        sourcePath: service.sourcePath,
         link: 'https://github.com/basketry/rules#pagination',
       };
     }
