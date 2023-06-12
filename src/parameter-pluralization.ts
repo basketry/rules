@@ -8,7 +8,7 @@ const code = 'basketry/parameter-pluralization';
 const link = 'https://github.com/basketry/rules#pluralization';
 
 const parameterPlurlaizationRule = parameterRule(
-  ({ method, parameter, sourcePath, options }) => {
+  ({ service, method, parameter, options }) => {
     if (
       parameter.isArray &&
       parameter.name.value !== plural(parameter.name.value)
@@ -20,7 +20,7 @@ const parameterPlurlaizationRule = parameterRule(
         }") is an array and must be named "${plural(parameter.name.value)}"`,
         range: decodeRange(parameter.name.loc),
         severity: parseSeverity(options?.severity),
-        sourcePath,
+        sourcePath: service.sourcePath,
         link,
       };
     } else if (
@@ -34,7 +34,7 @@ const parameterPlurlaizationRule = parameterRule(
         }") is an array and must be named "${singular(parameter.name.value)}"`,
         range: decodeRange(parameter.name.loc),
         severity: parseSeverity(options?.severity),
-        sourcePath,
+        sourcePath: service.sourcePath,
         link,
       };
     }

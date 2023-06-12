@@ -31,7 +31,8 @@ describe('basketry/relay-pagination', () => {
       const ir: Service = build.service({
         interfaces: [
           {
-            name: 'interface',
+            kind: 'Interface',
+            name: { value: 'interface' },
             methods: [
               build.method({
                 name,
@@ -68,7 +69,8 @@ describe('basketry/relay-pagination', () => {
       const ir: Service = build.service({
         interfaces: [
           {
-            name: 'interface',
+            kind: 'Interface',
+            name: { value: 'interface' },
             methods: [
               build.method({
                 name,
@@ -94,7 +96,8 @@ describe('basketry/relay-pagination', () => {
       const ir: Service = build.service({
         interfaces: [
           {
-            name: 'interface',
+            kind: 'Interface',
+            name: { value: 'interface' },
             methods: [
               build.method({
                 name,
@@ -163,7 +166,8 @@ describe('basketry/relay-pagination', () => {
       const ir: Service = build.service({
         interfaces: [
           {
-            name: 'interface',
+            kind: 'Interface',
+            name: { value: 'interface' },
             methods: [
               build.method({
                 name,
@@ -189,7 +193,8 @@ describe('basketry/relay-pagination', () => {
       const ir: Service = build.service({
         interfaces: [
           {
-            name: 'interface',
+            kind: 'Interface',
+            name: { value: 'interface' },
             methods: [
               build.method({
                 name,
@@ -224,7 +229,8 @@ describe('basketry/relay-pagination', () => {
       const ir: Service = build.service({
         interfaces: [
           {
-            name: 'interface',
+            kind: 'Interface',
+            name: { value: 'interface' },
             methods: [
               build.method({
                 name,
@@ -297,7 +303,8 @@ describe('basketry/relay-pagination', () => {
       const ir: Service = build.service({
         interfaces: [
           {
-            name: 'interface',
+            kind: 'Interface',
+            name: { value: 'interface' },
             methods: [
               build.method({
                 name,
@@ -312,7 +319,7 @@ describe('basketry/relay-pagination', () => {
       });
 
       // ACT
-      const violations = relayPaginationRule(ir, 'test.ext', options);
+      const violations = relayPaginationRule(ir, options);
 
       // ASSERT
       expect(violations).toEqual([violation()]);
@@ -323,7 +330,8 @@ describe('basketry/relay-pagination', () => {
       const ir: Service = build.service({
         interfaces: [
           {
-            name: 'interface',
+            kind: 'Interface',
+            name: { value: 'interface' },
             methods: [
               build.method({
                 name,
@@ -338,7 +346,7 @@ describe('basketry/relay-pagination', () => {
       });
 
       // ACT
-      const violations = relayPaginationRule(ir, 'test.ext', options);
+      const violations = relayPaginationRule(ir, options);
 
       // ASSERT
       expect(violations).toEqual([]);
@@ -349,7 +357,8 @@ describe('basketry/relay-pagination', () => {
       const ir: Service = build.service({
         interfaces: [
           {
-            name: 'interface',
+            kind: 'Interface',
+            name: { value: 'interface' },
             methods: [
               build.method({
                 name,
@@ -364,7 +373,7 @@ describe('basketry/relay-pagination', () => {
       });
 
       // ACT
-      const violations = relayPaginationRule(ir, 'test.ext', {
+      const violations = relayPaginationRule(ir, {
         allow: ['some_other_method_name'],
       });
 
@@ -424,7 +433,8 @@ describe('basketry/relay-pagination', () => {
       const ir: Service = build.service({
         interfaces: [
           {
-            name: 'interface',
+            kind: 'Interface',
+            name: { value: 'interface' },
             methods: [
               build.method({
                 name,
@@ -439,7 +449,7 @@ describe('basketry/relay-pagination', () => {
       });
 
       // ACT
-      const violations = relayPaginationRule(ir, 'test.ext', options);
+      const violations = relayPaginationRule(ir, options);
 
       // ASSERT
       expect(violations).toEqual([]);
@@ -450,7 +460,8 @@ describe('basketry/relay-pagination', () => {
       const ir: Service = build.service({
         interfaces: [
           {
-            name: 'interface',
+            kind: 'Interface',
+            name: { value: 'interface' },
             methods: [
               build.method({
                 name,
@@ -465,7 +476,7 @@ describe('basketry/relay-pagination', () => {
       });
 
       // ACT
-      const violations = relayPaginationRule(ir, 'test.ext', options);
+      const violations = relayPaginationRule(ir, options);
 
       // ASSERT
       expect(violations).toEqual([]);
@@ -476,7 +487,8 @@ describe('basketry/relay-pagination', () => {
       const ir: Service = build.service({
         interfaces: [
           {
-            name: 'interface',
+            kind: 'Interface',
+            name: { value: 'interface' },
             methods: [
               build.method({
                 name,
@@ -491,7 +503,7 @@ describe('basketry/relay-pagination', () => {
       });
 
       // ACT
-      const violations = relayPaginationRule(ir, 'test.ext', {
+      const violations = relayPaginationRule(ir, {
         deny: ['some_other_method_name'],
       });
 
