@@ -1,6 +1,6 @@
 {
   "name": "@basketry/rules",
-  "version": "0.1.0-rc.0",
+  "version": "0.1.0-rc.1",
   "description": "Common rules for building Basketry pipelines",
   "main": "./lib/index.js",
   "scripts": {
