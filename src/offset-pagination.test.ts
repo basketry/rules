@@ -2,7 +2,7 @@ import { Parameter, Service, Violation } from 'basketry';
 import * as build from './test-utils';
 import offsetPaginationRule from './offset-pagination';
 
-const name = { value: 'someMethod' };
+const name = build.stringLiteral('someMethod');
 
 describe('basketry/offset-pagination', () => {
   it('returns an empty array on an empty service', () => {
@@ -17,31 +17,29 @@ describe('basketry/offset-pagination', () => {
   });
 
   describe('when the return type is a non-envelope object', () => {
-    const returnType = build.returnType({
-      typeName: { value: 'widget' },
-      isArray: false,
-      isPrimitive: false,
+    const returns = build.returnValue({
+      value: build.complexValue({
+        typeName: build.stringLiteral('widget'),
+      }),
     });
     const type = build.type({
-      properties: [build.property({ name: { value: 'id' } })],
+      properties: [build.property({ name: build.stringLiteral('id') })],
     });
 
     it('returns an empty array if paging parameters are not supplied', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
+          build.int({
+            name: build.stringLiteral('interface'),
             methods: [
               build.method({
                 name,
                 parameters: [],
-                returnType,
+                returns,
               }),
             ],
-            protocols: { http: [] },
-          },
+          }),
         ],
         types: [type],
       });
@@ -55,31 +53,30 @@ describe('basketry/offset-pagination', () => {
   });
 
   describe('when the return type is an array', () => {
-    const returnType = build.returnType({
-      typeName: { value: 'widget' },
-      isArray: true,
-      isPrimitive: false,
+    const returns = build.returnValue({
+      value: build.complexValue({
+        typeName: build.stringLiteral('widget'),
+        isArray: build.trueLiteral(true),
+      }),
     });
     const type = build.type({
-      properties: [build.property({ name: { value: 'id' } })],
+      properties: [build.property({ name: build.stringLiteral('id') })],
     });
 
     it('returns an empty array if paging parameters are supplied', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
+          build.int({
+            name: build.stringLiteral('interface'),
             methods: [
               build.method({
                 name,
                 parameters: paginationParams(),
-                returnType,
+                returns,
               }),
             ],
-            protocols: { http: [] },
-          },
+          }),
         ],
         types: [type],
       });
@@ -95,18 +92,16 @@ describe('basketry/offset-pagination', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
+          build.int({
+            name: build.stringLiteral('interface'),
             methods: [
               build.method({
                 name,
                 parameters: [],
-                returnType,
+                returns,
               }),
             ],
-            protocols: { http: [] },
-          },
+          }),
         ],
         types: [type],
       });
@@ -120,29 +115,27 @@ describe('basketry/offset-pagination', () => {
   });
 
   describe('when the return type is an array envelope', () => {
-    const returnType = build.returnType({
-      typeName: { value: 'envelope' },
-      isArray: false,
-      isPrimitive: false,
-    });
     const envelope = build.envelope({ isArray: true });
+    const returns = build.returnValue({
+      value: build.complexValue({
+        typeName: envelope.name,
+      }),
+    });
 
     it('returns an empty array if paging parameters are supplied', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
+          build.int({
+            name: build.stringLiteral('interface'),
             methods: [
               build.method({
                 name,
                 parameters: paginationParams(),
-                returnType,
+                returns,
               }),
             ],
-            protocols: { http: [] },
-          },
+          }),
         ],
         types: [envelope],
       });
@@ -158,18 +151,16 @@ describe('basketry/offset-pagination', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
+          build.int({
+            name: build.stringLiteral('interface'),
             methods: [
               build.method({
                 name,
                 parameters: [],
-                returnType,
+                returns,
               }),
             ],
-            protocols: { http: [] },
-          },
+          }),
         ],
         types: [envelope],
       });
@@ -183,29 +174,27 @@ describe('basketry/offset-pagination', () => {
   });
 
   describe('when the return type is a non-array envelope', () => {
-    const returnType = build.returnType({
-      typeName: { value: 'envelope' },
-      isArray: false,
-      isPrimitive: false,
-    });
     const envelope = build.envelope({ isArray: false });
+    const returns = build.returnValue({
+      value: build.complexValue({
+        typeName: envelope.name,
+      }),
+    });
 
     it('returns an empty array if paging parameters are not supplied', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
+          build.int({
+            name: build.stringLiteral('interface'),
             methods: [
               build.method({
                 name,
                 parameters: [],
-                returnType,
+                returns,
               }),
             ],
-            protocols: { http: [] },
-          },
+          }),
         ],
         types: [envelope],
       });
@@ -223,31 +212,27 @@ describe('basketry/offset-pagination', () => {
       allow: [name.value],
     };
 
-    const returnType = build.returnType({
-      typeName: { value: 'envelope' },
-      isArray: false,
-      isPrimitive: false,
-    });
-    const envelope = build.envelope({
-      isArray: true,
+    const envelope = build.envelope({ isArray: true });
+    const returns = build.returnValue({
+      value: build.complexValue({
+        typeName: envelope.name,
+      }),
     });
 
     it('returns a violation if an unpaged method is in the allow list', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
+          build.int({
+            name: build.stringLiteral('interface'),
             methods: [
               build.method({
                 name,
                 parameters: [],
-                returnType,
+                returns,
               }),
             ],
-            protocols: { http: [] },
-          },
+          }),
         ],
         types: [envelope],
       });
@@ -263,18 +248,16 @@ describe('basketry/offset-pagination', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
+          build.int({
+            name: build.stringLiteral('interface'),
             methods: [
               build.method({
                 name,
                 parameters: paginationParams(),
-                returnType,
+                returns,
               }),
             ],
-            protocols: { http: [] },
-          },
+          }),
         ],
         types: [envelope],
       });
@@ -290,18 +273,16 @@ describe('basketry/offset-pagination', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
+          build.int({
+            name: build.stringLiteral('interface'),
             methods: [
               build.method({
                 name,
                 parameters: [],
-                returnType,
+                returns,
               }),
             ],
-            protocols: { http: [] },
-          },
+          }),
         ],
         types: [envelope],
       });
@@ -321,31 +302,27 @@ describe('basketry/offset-pagination', () => {
       deny: [name.value],
     };
 
-    const returnType = build.returnType({
-      typeName: { value: 'envelope' },
-      isArray: false,
-      isPrimitive: false,
-    });
-    const envelope = build.envelope({
-      isArray: true,
+    const envelope = build.envelope({ isArray: true });
+    const returns = build.returnValue({
+      value: build.complexValue({
+        typeName: envelope.name,
+      }),
     });
 
     it('returns an empty array if an unpaged method is in the deny list', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
+          build.int({
+            name: build.stringLiteral('interface'),
             methods: [
               build.method({
                 name,
                 parameters: [],
-                returnType,
+                returns,
               }),
             ],
-            protocols: { http: [] },
-          },
+          }),
         ],
         types: [envelope],
       });
@@ -361,18 +338,16 @@ describe('basketry/offset-pagination', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
+          build.int({
+            name: build.stringLiteral('interface'),
             methods: [
               build.method({
                 name,
                 parameters: paginationParams(),
-                returnType,
+                returns,
               }),
             ],
-            protocols: { http: [] },
-          },
+          }),
         ],
         types: [envelope],
       });
@@ -388,18 +363,16 @@ describe('basketry/offset-pagination', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
+          build.int({
+            name: build.stringLiteral('interface'),
             methods: [
               build.method({
                 name,
                 parameters: [],
-                returnType,
+                returns,
               }),
             ],
-            protocols: { http: [] },
-          },
+          }),
         ],
         types: [envelope],
       });
@@ -417,14 +390,16 @@ describe('basketry/offset-pagination', () => {
 
 const paginationParams = (): Parameter[] => [
   build.parameter({
-    name: { value: 'offset' },
-    typeName: { value: 'integer' },
-    isArray: false,
+    name: build.stringLiteral('offset'),
+    value: build.primitiveValue({
+      typeName: build.primitiveLiteral('integer'),
+    }),
   }),
   build.parameter({
-    name: { value: 'limit' },
-    typeName: { value: 'integer' },
-    isArray: false,
+    name: build.stringLiteral('limit'),
+    value: build.primitiveValue({
+      typeName: build.primitiveLiteral('integer'),
+    }),
   }),
 ];
 

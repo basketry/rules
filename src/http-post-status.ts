@@ -10,14 +10,17 @@ const httpPostStatusRule = methodRule(({ service, httpMethod, options }) => {
     httpMethod.verb.value === 'post' &&
     !allowedCodes.has(httpMethod.successCode.value)
   ) {
+    const { range, sourceIndex } = decodeRange(
+      httpMethod.successCode.loc || httpMethod.loc,
+    );
     return {
       code: 'basketry/http-post-status',
       message: `HTTP status code for POST method "${
         httpMethod.name.value
       }" must be one of the following: ${Array.from(allowedCodes).join(', ')}.`,
-      range: decodeRange(httpMethod.successCode.loc || httpMethod.loc),
+      range,
       severity: parseSeverity(options?.severity),
-      sourcePath: service.sourcePath,
+      sourcePath: service.sourcePaths[sourceIndex],
       link: 'https://github.com/basketry/rules#http-status-codes',
     };
   }

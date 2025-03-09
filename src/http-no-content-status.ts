@@ -5,21 +5,27 @@ const httpNoContentStatusRule = methodRule(
   ({ service, httpMethod, method, options }) => {
     if (!httpMethod) return;
 
-    if (!method.returnType && httpMethod.successCode.value !== 204) {
+    if (!method.returns && httpMethod.successCode.value !== 204) {
+      const { range, sourceIndex } = decodeRange(
+        httpMethod.successCode.loc || httpMethod.loc,
+      );
       return {
         code: 'basketry/http-no-content-status',
         message: `Method "${httpMethod.name.value}" does not have a return type and must return an HTTP status code of 204.`,
-        range: decodeRange(httpMethod.successCode.loc || httpMethod.loc),
+        range,
         severity: parseSeverity(options?.severity),
-        sourcePath: service.sourcePath,
+        sourcePath: service.sourcePaths[sourceIndex],
       };
-    } else if (method.returnType && httpMethod.successCode.value === 204) {
+    } else if (method.returns && httpMethod.successCode.value === 204) {
+      const { range, sourceIndex } = decodeRange(
+        httpMethod.successCode.loc || httpMethod.loc,
+      );
       return {
         code: 'basketry/http-no-content-status',
         message: `Method "${httpMethod.name.value}" has a return type and must not return an HTTP status code of 204.`,
-        range: decodeRange(httpMethod.successCode.loc || httpMethod.loc),
+        range,
         severity: parseSeverity(options?.severity),
-        sourcePath: service.sourcePath,
+        sourcePath: service.sourcePaths[sourceIndex],
         link: 'https://github.com/basketry/rules#http-status-codes',
       };
     }

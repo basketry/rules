@@ -20,28 +20,29 @@ const offsetPaginationRule = methodRule(
           .includes(httpMethod.verb.value));
 
     if (!allow) return;
-    if (!isArrayPayload(service, options, method.returnType)) return;
+    if (!isArrayPayload(service, options, method.returns)) return;
 
     const offset = method.parameters.find(
       (p) =>
         snake(p.name.value) === 'offset' &&
-        p.typeName.value === 'integer' &&
-        !isRequired(p),
+        p.value.typeName.value === 'integer' &&
+        !isRequired(p.value),
     );
     const limit = method.parameters.find(
       (p) =>
         snake(p.name.value) === 'limit' &&
-        p.typeName.value === 'integer' &&
-        !isRequired(p),
+        p.value.typeName.value === 'integer' &&
+        !isRequired(p.value),
     );
 
     if (!offset || !limit) {
+      const { range, sourceIndex } = decodeRange(method.loc);
       return {
         code: 'basketry/offset-pagination',
         message: `Method "${method.name.value}" must define optional integer offset and limit parameters.`,
-        range: decodeRange(method.loc),
+        range,
         severity: parseSeverity(options?.severity),
-        sourcePath: service.sourcePath,
+        sourcePath: service.sourcePaths[sourceIndex],
         link: 'https://github.com/basketry/rules#pagination',
       };
     }
