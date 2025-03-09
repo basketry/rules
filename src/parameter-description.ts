@@ -4,12 +4,13 @@ import { parseSeverity } from './utils';
 const parameterDescriptionRule = parameterRule(
   ({ service, parameter, options }) => {
     if (!parameter.description) {
+      const { range, sourceIndex } = decodeRange(parameter.loc);
       return {
         code: 'basketry/parameter-description',
         message: `Parameter "${parameter.name.value}" is required to have a description.`,
-        range: decodeRange(parameter.loc),
+        range,
         severity: parseSeverity(options?.severity),
-        sourcePath: service.sourcePath,
+        sourcePath: service.sourcePaths[sourceIndex],
         link: 'https://github.com/basketry/rules#descriptions',
       };
     }
