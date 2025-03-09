@@ -31,7 +31,9 @@ const parameterPlurlaizationRule = parameterRule(
         code,
         message: `Parameter "${parameter.name.value}" (method "${
           method.name.value
-        }") is an array and must be named "${singular(parameter.name.value)}"`,
+        }") is not an array and must be named "${singular(
+          parameter.name.value,
+        )}"`,
         range: decodeRange(parameter.name.loc),
         severity: parseSeverity(options?.severity),
         sourcePath: service.sourcePath,
