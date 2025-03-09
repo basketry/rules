@@ -37,7 +37,9 @@ const propertyPlurlaizationRule = propertyRule(
         code,
         message: `Parameter "${property.name.value}" (type "${
           type.name.value
-        }") is an array and must be named "${singular(property.name.value)}"`,
+        }") is not an array and must be named "${singular(
+          property.name.value,
+        )}"`,
         range: decodeRange(property.name.loc),
         severity: parseSeverity(options?.severity),
         sourcePath: service.sourcePath,
