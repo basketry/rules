@@ -5,9 +5,9 @@ import { parseSeverity } from './utils';
 const allowed = new Set(['value', 'values', 'data']);
 
 const responseEnvelopeRule = methodRule(({ method, service, options }) => {
-  if (!method.returnType) return;
+  if (!method.returns) return;
   const type = service.types.find(
-    (t) => t.name.value === method.returnType?.typeName.value,
+    (t) => t.name.value === method.returns?.value.typeName.value,
   );
 
   const errors = type?.properties.find((p) => snake(p.name.value) === 'errors');
@@ -16,7 +16,8 @@ const responseEnvelopeRule = methodRule(({ method, service, options }) => {
     parseAllowed(options?.payload).has(snake(p.name.value)),
   );
 
-  if (!errors?.isArray || !payload) {
+  if (!errors?.value.isArray || !payload) {
+    const { range, sourceIndex } = decodeRange(method.returns.loc);
     return {
       code: 'basketry/response-envelope',
       message: `Method "${
@@ -24,9 +25,9 @@ const responseEnvelopeRule = methodRule(({ method, service, options }) => {
       }" must return an envelope with at least an errors array and payload property with one of the following names: ${getAllowed(
         options?.payload,
       ).join(', ')}.`,
-      range: decodeRange(method.returnType.loc),
+      range,
       severity: parseSeverity(options?.severity),
-      sourcePath: service.sourcePath,
+      sourcePath: service.sourcePaths[sourceIndex],
       link: 'https://github.com/basketry/rules#response-envelopes',
     };
   }

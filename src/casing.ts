@@ -1,7 +1,7 @@
 import {
   allEnums,
-  allEnumValues,
-  allHttpPaths,
+  allEnumMembers,
+  allHttpRoutes,
   allMethods,
   allParameters,
   allProperties,
@@ -24,12 +24,13 @@ const casingRule: Rule = (service, options) => {
       const casing = parseCasing(options?.enum);
       const correct = applyCasing(name.value, casing);
       if (name.value !== correct) {
+        const { range, sourceIndex } = decodeRange(name.loc);
         violations.push({
           code: 'basketry/enum-casing',
           message: `Enum name "${name.value}" must be ${casing} cased: "${correct}"`,
-          range: decodeRange(name.loc),
+          range,
           severity: parseSeverity(options?.severity),
-          sourcePath: service.sourcePath,
+          sourcePath: service.sourcePaths[sourceIndex],
           link,
         });
       }
@@ -37,16 +38,17 @@ const casingRule: Rule = (service, options) => {
   }
 
   if (options?.enumValue) {
-    for (const { value } of allEnumValues(service, options)) {
+    for (const { member } of allEnumMembers(service, options)) {
       const casing = parseCasing(options?.enumValue);
-      const correct = applyCasing(value.content.value, casing);
-      if (value.content.value !== correct) {
+      const correct = applyCasing(member.content.value, casing);
+      if (member.content.value !== correct) {
+        const { range, sourceIndex } = decodeRange(member.loc);
         violations.push({
-          code: 'basketry/enum-value-casing',
-          message: `Enum value "${value.content.value}" must be ${casing} cased: "${correct}"`,
-          range: decodeRange(value.loc),
+          code: 'basketry/enum-member-casing',
+          message: `Enum member "${member.content.value}" must be ${casing} cased: "${correct}"`,
+          range,
           severity: parseSeverity(options?.severity),
-          sourcePath: service.sourcePath,
+          sourcePath: service.sourcePaths[sourceIndex],
           link,
         });
       }
@@ -55,9 +57,9 @@ const casingRule: Rule = (service, options) => {
 
   if (options?.path) {
     for (const {
-      httpPath: { path },
-    } of allHttpPaths(service, options)) {
-      for (const segment of path.value.split('/')) {
+      httpRoute: { pattern },
+    } of allHttpRoutes(service, options)) {
+      for (const segment of pattern.value.split('/')) {
         if (
           segment.startsWith(':') ||
           (segment.startsWith('{') && segment.endsWith('}'))
@@ -67,12 +69,13 @@ const casingRule: Rule = (service, options) => {
         const casing = parseCasing(options?.path);
         const correct = applyCasing(segment, casing);
         if (segment !== correct) {
+          const { range, sourceIndex } = decodeRange(pattern.loc);
           violations.push({
-            code: 'basketry/path-casing',
+            code: 'basketry/route-casing',
             message: `Path segment "${segment}" must be ${casing} cased: "${correct}"`,
-            range: decodeRange(path.loc),
+            range,
             severity: parseSeverity(options?.severity),
-            sourcePath: service.sourcePath,
+            sourcePath: service.sourcePaths[sourceIndex],
             link,
           });
         }
@@ -87,12 +90,13 @@ const casingRule: Rule = (service, options) => {
       const casing = parseCasing(options?.method);
       const correct = applyCasing(name.value, casing);
       if (name.value !== correct) {
+        const { range, sourceIndex } = decodeRange(name.loc);
         violations.push({
           code: 'basketry/method-casing',
           message: `Method name "${name.value}" must be ${casing} cased: "${correct}"`,
-          range: decodeRange(name.loc),
+          range,
           severity: parseSeverity(options?.severity),
-          sourcePath: service.sourcePath,
+          sourcePath: service.sourcePaths[sourceIndex],
           link,
         });
       }
@@ -104,18 +108,23 @@ const casingRule: Rule = (service, options) => {
       parameter: { name },
       httpParameter,
     } of allParameters(service, options)) {
-      if (options?.header && httpParameter?.in?.value === 'header') continue;
-      if (options?.query && httpParameter?.in?.value === 'query') continue;
+      if (options?.header && httpParameter?.location?.value === 'header') {
+        continue;
+      }
+      if (options?.query && httpParameter?.location?.value === 'query') {
+        continue;
+      }
 
       const casing = parseCasing(options?.parameter);
       const correct = applyCasing(name.value, casing);
       if (name.value !== correct) {
+        const { range, sourceIndex } = decodeRange(name.loc);
         violations.push({
           code: 'basketry/parameter-casing',
           message: `Parameter name "${name.value}" must be ${casing} cased: "${correct}"`,
-          range: decodeRange(name.loc),
+          range,
           severity: parseSeverity(options?.severity),
-          sourcePath: service.sourcePath,
+          sourcePath: service.sourcePaths[sourceIndex],
           link,
         });
       }
@@ -127,17 +136,18 @@ const casingRule: Rule = (service, options) => {
       parameter: { name },
       httpParameter,
     } of allParameters(service, options)) {
-      if (httpParameter?.in?.value !== 'header') continue;
+      if (httpParameter?.location?.value !== 'header') continue;
 
       const casing = parseCasing(options?.header);
       const correct = applyCasing(name.value, casing);
       if (name.value !== correct) {
+        const { range, sourceIndex } = decodeRange(name.loc);
         violations.push({
           code: 'basketry/header-casing',
           message: `Header name "${name.value}" must be ${casing} cased: "${correct}"`,
-          range: decodeRange(name.loc),
+          range,
           severity: parseSeverity(options?.severity),
-          sourcePath: service.sourcePath,
+          sourcePath: service.sourcePaths[sourceIndex],
           link,
         });
       }
@@ -149,17 +159,18 @@ const casingRule: Rule = (service, options) => {
       parameter: { name },
       httpParameter,
     } of allParameters(service, options)) {
-      if (httpParameter?.in?.value !== 'query') continue;
+      if (httpParameter?.location?.value !== 'query') continue;
 
       const casing = parseCasing(options?.query);
       const correct = applyCasing(name.value, casing);
       if (name.value !== correct) {
+        const { range, sourceIndex } = decodeRange(name.loc);
         violations.push({
           code: 'basketry/query-casing',
           message: `Query parameter "${name.value}" must be ${casing} cased: "${correct}"`,
-          range: decodeRange(name.loc),
+          range,
           severity: parseSeverity(options?.severity),
-          sourcePath: service.sourcePath,
+          sourcePath: service.sourcePaths[sourceIndex],
           link,
         });
       }
@@ -173,12 +184,13 @@ const casingRule: Rule = (service, options) => {
       const casing = parseCasing(options?.property);
       const correct = applyCasing(name.value, casing);
       if (name.value !== correct) {
+        const { range, sourceIndex } = decodeRange(name.loc);
         violations.push({
           code: 'basketry/property-casing',
           message: `Property name "${name.value}" must be ${casing} cased: "${correct}"`,
-          range: decodeRange(name.loc),
+          range,
           severity: parseSeverity(options?.severity),
-          sourcePath: service.sourcePath,
+          sourcePath: service.sourcePaths[sourceIndex],
           link,
         });
       }
@@ -192,12 +204,13 @@ const casingRule: Rule = (service, options) => {
       const casing = parseCasing(options?.type);
       const correct = applyCasing(name.value, casing);
       if (name.value !== correct) {
+        const { range, sourceIndex } = decodeRange(name.loc);
         violations.push({
           code: 'basketry/type-casing',
           message: `Type name "${name.value}" must be ${casing} cased: "${correct}"`,
-          range: decodeRange(name.loc),
+          range,
           severity: parseSeverity(options?.severity),
-          sourcePath: service.sourcePath,
+          sourcePath: service.sourcePaths[sourceIndex],
           link,
         });
       }

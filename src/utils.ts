@@ -1,4 +1,4 @@
-import { getTypeByName, ReturnType, Service, Severity } from 'basketry';
+import { getTypeByName, ReturnValue, Service, Severity } from 'basketry';
 import { camel, constant, header, kebab, pascal, snake } from 'case';
 
 export type Casing =
@@ -61,24 +61,24 @@ const allowedPayloadProps = new Set(['value', 'values', 'data']);
 export function isArrayPayload(
   service: Service,
   options: any,
-  returnType: ReturnType | undefined,
+  returns: ReturnValue | undefined,
 ): boolean {
-  if (!returnType) return false;
+  if (!returns) return false;
 
-  const type = getTypeByName(service, returnType.typeName.value);
-  if (!type) return returnType.isArray;
+  const type = getTypeByName(service, returns.value.typeName.value);
+  if (!type) return returns.value.isArray?.value === true;
 
   const errorProp = type.properties.find(
-    (prop) => snake(prop.name.value) === 'errors' && prop.isArray,
+    (prop) => snake(prop.name.value) === 'errors' && prop.value.isArray,
   );
-  if (!errorProp) return returnType.isArray;
+  if (!errorProp) return returns.value.isArray?.value === true;
 
   const payloadProp = type.properties.find((p) =>
     parseAllowedPayloadProps(options?.payload).has(snake(p.name.value)),
   );
-  if (!payloadProp) return returnType.isArray;
+  if (!payloadProp) return returns.value.isArray?.value === true;
 
-  return payloadProp.isArray;
+  return payloadProp.value.isArray?.value === true;
 }
 
 function parseAllowedPayloadProps(input: any): Set<string> {

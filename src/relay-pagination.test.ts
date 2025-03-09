@@ -1,8 +1,14 @@
-import { Parameter, Service, Violation } from 'basketry';
+import {
+  Interface,
+  Parameter,
+  ReturnValue,
+  Service,
+  Violation,
+} from 'basketry';
 import * as build from './test-utils';
 import relayPaginationRule from './relay-pagination';
 
-const name = { value: 'someMethod' };
+const name = build.stringLiteral('someMethod');
 
 describe('basketry/relay-pagination', () => {
   it('returns an empty array on an empty service', () => {
@@ -17,32 +23,19 @@ describe('basketry/relay-pagination', () => {
   });
 
   describe('when the return type is a non-envelope object', () => {
-    const returnType = build.returnType({
-      typeName: { value: 'widget' },
-      isArray: false,
-      isPrimitive: false,
+    const returns = build.returnValue({
+      value: build.complexValue({
+        typeName: build.stringLiteral('widget'),
+      }),
     });
     const type = build.type({
-      properties: [build.property({ name: { value: 'id' } })],
+      properties: [build.property({ name: build.stringLiteral('id') })],
     });
 
     it('returns an empty array if paging parameters are not supplied', () => {
       // ARRANGE
       const ir: Service = build.service({
-        interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
-            methods: [
-              build.method({
-                name,
-                parameters: [],
-                returnType,
-              }),
-            ],
-            protocols: { http: [] },
-          },
-        ],
+        interfaces: [withoutPagination(returns)],
         types: [type],
       });
 
@@ -55,32 +48,20 @@ describe('basketry/relay-pagination', () => {
   });
 
   describe('when the return type is an array', () => {
-    const returnType = build.returnType({
-      typeName: { value: 'widget' },
-      isArray: true,
-      isPrimitive: false,
+    const returns = build.returnValue({
+      value: build.complexValue({
+        typeName: build.stringLiteral('widget'),
+        isArray: build.trueLiteral(true),
+      }),
     });
     const type = build.type({
-      properties: [build.property({ name: { value: 'id' } })],
+      properties: [build.property({ name: build.stringLiteral('id') })],
     });
 
     it('returns a violation even if paging parameters are supplied', () => {
       // ARRANGE
       const ir: Service = build.service({
-        interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
-            methods: [
-              build.method({
-                name,
-                parameters: paginationParams(),
-                returnType,
-              }),
-            ],
-            protocols: { http: [] },
-          },
-        ],
+        interfaces: [withPagination(returns)],
         types: [type],
       });
 
@@ -94,20 +75,7 @@ describe('basketry/relay-pagination', () => {
     it('returns a violation if paging parameters are not supplied', () => {
       // ARRANGE
       const ir: Service = build.service({
-        interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
-            methods: [
-              build.method({
-                name,
-                parameters: [],
-                returnType,
-              }),
-            ],
-            protocols: { http: [] },
-          },
-        ],
+        interfaces: [withoutPagination(returns)],
         types: [type],
       });
 
@@ -120,65 +88,28 @@ describe('basketry/relay-pagination', () => {
   });
 
   describe('when the return type is an array envelope', () => {
-    const returnType = build.returnType({
-      typeName: { value: 'envelope' },
-      isArray: false,
-      isPrimitive: false,
-    });
-    const pageInfo = build.type({
-      name: { value: 'pageInfo' },
-      properties: [
-        build.property({
-          name: { value: 'hasPreviousPage' },
-          typeName: { value: 'boolean' },
-          isPrimitive: true,
-        }),
-        build.property({
-          name: { value: 'hasNextPage' },
-          typeName: { value: 'boolean' },
-          isPrimitive: true,
-        }),
-        build.property({
-          name: { value: 'startCursor' },
-          typeName: { value: 'string' },
-          isPrimitive: true,
-        }),
-        build.property({
-          name: { value: 'endCursor' },
-          typeName: { value: 'string' },
-          isPrimitive: true,
-        }),
-      ],
-    });
     const envelope = build.envelope({
       isArray: true,
       extraProperties: [
         build.property({
-          name: { value: 'pageInfo' },
-          typeName: { value: 'pageInfo' },
-          isPrimitive: false,
+          name: build.stringLiteral('pageInfo'),
+          value: build.complexValue({
+            typeName: pageInfo().name,
+          }),
         }),
       ],
+    });
+    const returns = build.returnValue({
+      value: build.complexValue({
+        typeName: envelope.name,
+      }),
     });
 
     it('returns an empty array if paging parameters are supplied and page info is returned', () => {
       // ARRANGE
       const ir: Service = build.service({
-        interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
-            methods: [
-              build.method({
-                name,
-                parameters: paginationParams(),
-                returnType,
-              }),
-            ],
-            protocols: { http: [] },
-          },
-        ],
-        types: [envelope, pageInfo],
+        interfaces: [withPagination(returns)],
+        types: [envelope, pageInfo()],
       });
 
       // ACT
@@ -192,18 +123,16 @@ describe('basketry/relay-pagination', () => {
       // ARRANGE
       const ir: Service = build.service({
         interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
+          build.int({
+            name: build.stringLiteral('interface'),
             methods: [
               build.method({
                 name,
                 parameters: [],
-                returnType,
+                returns,
               }),
             ],
-            protocols: { http: [] },
-          },
+          }),
         ],
         types: [envelope],
       });
@@ -217,30 +146,17 @@ describe('basketry/relay-pagination', () => {
   });
 
   describe('when the return type is a non-array envelope', () => {
-    const returnType = build.returnType({
-      typeName: { value: 'envelope' },
-      isArray: false,
-      isPrimitive: false,
-    });
     const envelope = build.envelope({ isArray: false });
+    const returns = build.returnValue({
+      value: build.complexValue({
+        typeName: envelope.name,
+      }),
+    });
 
     it('returns an empty array if paging parameters are not supplied', () => {
       // ARRANGE
       const ir: Service = build.service({
-        interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
-            methods: [
-              build.method({
-                name,
-                parameters: [],
-                returnType,
-              }),
-            ],
-            protocols: { http: [] },
-          },
-        ],
+        interfaces: [withoutPagination(returns)],
         types: [envelope],
       });
 
@@ -256,66 +172,28 @@ describe('basketry/relay-pagination', () => {
     const options = {
       allow: [name.value],
     };
-
-    const returnType = build.returnType({
-      typeName: { value: 'envelope' },
-      isArray: false,
-      isPrimitive: false,
-    });
-    const pageInfo = build.type({
-      name: { value: 'pageInfo' },
-      properties: [
-        build.property({
-          name: { value: 'hasPreviousPage' },
-          typeName: { value: 'boolean' },
-          isPrimitive: true,
-        }),
-        build.property({
-          name: { value: 'hasNextPage' },
-          typeName: { value: 'boolean' },
-          isPrimitive: true,
-        }),
-        build.property({
-          name: { value: 'startCursor' },
-          typeName: { value: 'string' },
-          isPrimitive: true,
-        }),
-        build.property({
-          name: { value: 'endCursor' },
-          typeName: { value: 'string' },
-          isPrimitive: true,
-        }),
-      ],
-    });
     const envelope = build.envelope({
       isArray: true,
       extraProperties: [
         build.property({
-          name: { value: 'pageInfo' },
-          typeName: { value: 'pageInfo' },
-          isPrimitive: false,
+          name: build.stringLiteral('pageInfo'),
+          value: build.complexValue({
+            typeName: pageInfo().name,
+          }),
         }),
       ],
+    });
+    const returns = build.returnValue({
+      value: build.complexValue({
+        typeName: envelope.name,
+      }),
     });
 
     it('returns a violation if an unpaged method is in the allow list', () => {
       // ARRANGE
       const ir: Service = build.service({
-        interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
-            methods: [
-              build.method({
-                name,
-                parameters: [],
-                returnType,
-              }),
-            ],
-            protocols: { http: [] },
-          },
-        ],
-        types: [envelope, pageInfo],
+        interfaces: [withoutPagination(returns)],
+        types: [envelope, pageInfo()],
       });
 
       // ACT
@@ -328,21 +206,8 @@ describe('basketry/relay-pagination', () => {
     it('returns an empty array if a paged method is in the allow list', () => {
       // ARRANGE
       const ir: Service = build.service({
-        interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
-            methods: [
-              build.method({
-                name,
-                parameters: paginationParams(),
-                returnType,
-              }),
-            ],
-            protocols: { http: [] },
-          },
-        ],
-        types: [envelope, pageInfo],
+        interfaces: [withPagination(returns)],
+        types: [envelope, pageInfo()],
       });
 
       // ACT
@@ -355,21 +220,8 @@ describe('basketry/relay-pagination', () => {
     it('returns an empty array if an unpaged method is not in the allow list', () => {
       // ARRANGE
       const ir: Service = build.service({
-        interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
-            methods: [
-              build.method({
-                name,
-                parameters: [],
-                returnType,
-              }),
-            ],
-            protocols: { http: [] },
-          },
-        ],
-        types: [envelope, pageInfo],
+        interfaces: [withoutPagination(returns)],
+        types: [envelope, pageInfo()],
       });
 
       // ACT
@@ -386,66 +238,28 @@ describe('basketry/relay-pagination', () => {
     const options = {
       deny: [name.value],
     };
-
-    const returnType = build.returnType({
-      typeName: { value: 'envelope' },
-      isArray: false,
-      isPrimitive: false,
-    });
-    const pageInfo = build.type({
-      name: { value: 'pageInfo' },
-      properties: [
-        build.property({
-          name: { value: 'hasPreviousPage' },
-          typeName: { value: 'boolean' },
-          isPrimitive: true,
-        }),
-        build.property({
-          name: { value: 'hasNextPage' },
-          typeName: { value: 'boolean' },
-          isPrimitive: true,
-        }),
-        build.property({
-          name: { value: 'startCursor' },
-          typeName: { value: 'string' },
-          isPrimitive: true,
-        }),
-        build.property({
-          name: { value: 'endCursor' },
-          typeName: { value: 'string' },
-          isPrimitive: true,
-        }),
-      ],
-    });
     const envelope = build.envelope({
       isArray: true,
       extraProperties: [
         build.property({
-          name: { value: 'pageInfo' },
-          typeName: { value: 'pageInfo' },
-          isPrimitive: false,
+          name: build.stringLiteral('pageInfo'),
+          value: build.complexValue({
+            typeName: pageInfo().name,
+          }),
         }),
       ],
+    });
+    const returns = build.returnValue({
+      value: build.complexValue({
+        typeName: envelope.name,
+      }),
     });
 
     it('returns an empty array if an unpaged method is in the deny list', () => {
       // ARRANGE
       const ir: Service = build.service({
-        interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
-            methods: [
-              build.method({
-                name,
-                parameters: [],
-                returnType,
-              }),
-            ],
-            protocols: { http: [] },
-          },
-        ],
-        types: [envelope, pageInfo],
+        interfaces: [withoutPagination(returns)],
+        types: [envelope, pageInfo()],
       });
 
       // ACT
@@ -458,21 +272,8 @@ describe('basketry/relay-pagination', () => {
     it('returns an empty array if a paged method is in the deny list', () => {
       // ARRANGE
       const ir: Service = build.service({
-        interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
-            methods: [
-              build.method({
-                name,
-                parameters: paginationParams(),
-                returnType,
-              }),
-            ],
-            protocols: { http: [] },
-          },
-        ],
-        types: [envelope, pageInfo],
+        interfaces: [withPagination(returns)],
+        types: [envelope, pageInfo()],
       });
 
       // ACT
@@ -485,21 +286,8 @@ describe('basketry/relay-pagination', () => {
     it('returns a violation if an unpaged method is not in the deny list', () => {
       // ARRANGE
       const ir: Service = build.service({
-        interfaces: [
-          {
-            kind: 'Interface',
-            name: { value: 'interface' },
-            methods: [
-              build.method({
-                name,
-                parameters: [],
-                returnType,
-              }),
-            ],
-            protocols: { http: [] },
-          },
-        ],
-        types: [envelope, pageInfo],
+        interfaces: [withoutPagination(returns)],
+        types: [envelope, pageInfo()],
       });
 
       // ACT
@@ -513,28 +301,88 @@ describe('basketry/relay-pagination', () => {
   });
 });
 
+const withPagination = (returns: ReturnValue): Interface =>
+  build.int({
+    name: build.stringLiteral('interface'),
+    methods: [
+      build.method({
+        name,
+        parameters: paginationParams(),
+        returns,
+      }),
+    ],
+  });
+
+const withoutPagination = (returns: ReturnValue): Interface =>
+  build.int({
+    name: build.stringLiteral('interface'),
+    methods: [
+      build.method({
+        name,
+        parameters: [],
+        returns,
+      }),
+    ],
+  });
+
 const paginationParams = (): Parameter[] => [
   build.parameter({
-    name: { value: 'first' },
-    typeName: { value: 'integer' },
-    isArray: false,
+    name: build.stringLiteral('first'),
+    value: build.primitiveValue({
+      typeName: build.primitiveLiteral('integer'),
+    }),
   }),
   build.parameter({
-    name: { value: 'after' },
-    typeName: { value: 'string' },
-    isArray: false,
+    name: build.stringLiteral('after'),
+    value: build.primitiveValue({
+      typeName: build.primitiveLiteral('string'),
+    }),
   }),
   build.parameter({
-    name: { value: 'last' },
-    typeName: { value: 'integer' },
-    isArray: false,
+    name: build.stringLiteral('last'),
+    value: build.primitiveValue({
+      typeName: build.primitiveLiteral('integer'),
+    }),
   }),
   build.parameter({
-    name: { value: 'before' },
-    typeName: { value: 'string' },
-    isArray: false,
+    name: build.stringLiteral('before'),
+    value: build.primitiveValue({
+      typeName: build.primitiveLiteral('string'),
+    }),
   }),
 ];
+
+function pageInfo() {
+  return build.type({
+    name: build.stringLiteral('pageInfo'),
+    properties: [
+      build.property({
+        name: build.stringLiteral('hasPreviousPage'),
+        value: build.primitiveValue({
+          typeName: build.primitiveLiteral('boolean'),
+        }),
+      }),
+      build.property({
+        name: build.stringLiteral('hasNextPage'),
+        value: build.primitiveValue({
+          typeName: build.primitiveLiteral('boolean'),
+        }),
+      }),
+      build.property({
+        name: build.stringLiteral('startCursor'),
+        value: build.primitiveValue({
+          typeName: build.primitiveLiteral('string'),
+        }),
+      }),
+      build.property({
+        name: build.stringLiteral('endCursor'),
+        value: build.primitiveValue({
+          typeName: build.primitiveLiteral('string'),
+        }),
+      }),
+    ],
+  });
+}
 
 const violation = (): Violation => ({
   code: 'basketry/relay-pagination',

@@ -10,23 +10,25 @@ const link = 'https://github.com/basketry/rules#pluralization';
 const parameterPlurlaizationRule = parameterRule(
   ({ service, method, parameter, options }) => {
     if (
-      parameter.isArray &&
+      parameter.value.isArray &&
       parameter.name.value !== plural(parameter.name.value)
     ) {
+      const { range, sourceIndex } = decodeRange(parameter.loc);
       return {
         code,
         message: `Parameter "${parameter.name.value}" (method "${
           method.name.value
         }") is an array and must be named "${plural(parameter.name.value)}"`,
-        range: decodeRange(parameter.name.loc),
+        range,
         severity: parseSeverity(options?.severity),
-        sourcePath: service.sourcePath,
+        sourcePath: service.sourcePaths[sourceIndex],
         link,
       };
     } else if (
-      !parameter.isArray &&
+      !parameter.value.isArray &&
       parameter.name.value !== singular(parameter.name.value)
     ) {
+      const { range, sourceIndex } = decodeRange(parameter.loc);
       return {
         code,
         message: `Parameter "${parameter.name.value}" (method "${
@@ -34,9 +36,9 @@ const parameterPlurlaizationRule = parameterRule(
         }") is not an array and must be named "${singular(
           parameter.name.value,
         )}"`,
-        range: decodeRange(parameter.name.loc),
+        range,
         severity: parseSeverity(options?.severity),
-        sourcePath: service.sourcePath,
+        sourcePath: service.sourcePaths[sourceIndex],
         link,
       };
     }

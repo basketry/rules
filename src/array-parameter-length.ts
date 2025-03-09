@@ -4,15 +4,16 @@ import { parseSeverity } from './utils';
 const arrayParameterLengthRule = parameterRule(
   ({ service, method, parameter, options }) => {
     if (
-      parameter.isArray &&
-      !parameter.rules.find((rule) => rule.id === 'array-max-items')
+      parameter.value.isArray &&
+      !parameter.value.rules.find((rule) => rule.id === 'ArrayMaxItems')
     ) {
+      const { range, sourceIndex } = decodeRange(parameter.name.loc);
       return {
         code: 'basketry/array-parameter-length',
         message: `Parameter "${parameter.name.value}" (method "${method.name.value}") is an array and must define a max array length.`,
-        range: decodeRange(parameter.name.loc),
+        range,
         severity: parseSeverity(options?.severity),
-        sourcePath: service.sourcePath,
+        sourcePath: service.sourcePaths[sourceIndex],
         link: 'https://github.com/basketry/rules#array-parameter-length',
       };
     }

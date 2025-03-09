@@ -26,82 +26,83 @@ const relayPaginationRule = methodRule(
           .includes(httpMethod.verb.value));
 
     if (!allow) return;
-    if (!isArrayPayload(service, options, method.returnType)) return;
+    if (!isArrayPayload(service, options, method.returns)) return;
 
     const first = () =>
       method.parameters.find(
         (p) =>
           snake(p.name.value) === 'first' &&
-          p.typeName.value === 'integer' &&
-          !isRequired(p),
+          p.value.typeName.value === 'integer' &&
+          !isRequired(p.value),
       );
     const after = () =>
       method.parameters.find(
         (p) =>
           snake(p.name.value) === 'after' &&
-          p.typeName.value === 'string' &&
-          !isRequired(p),
+          p.value.typeName.value === 'string' &&
+          !isRequired(p.value),
       );
     const last = () =>
       method.parameters.find(
         (p) =>
           snake(p.name.value) === 'last' &&
-          p.typeName.value === 'integer' &&
-          !isRequired(p),
+          p.value.typeName.value === 'integer' &&
+          !isRequired(p.value),
       );
     const before = () =>
       method.parameters.find(
         (p) =>
           snake(p.name.value) === 'before' &&
-          p.typeName.value === 'string' &&
-          !isRequired(p),
+          p.value.typeName.value === 'string' &&
+          !isRequired(p.value),
       );
     const pageInfo = () =>
-      getTypeByName(service, method.returnType?.typeName.value)
-        ?.properties.filter((prop) => !prop.isPrimitive)
-        .map((prop) => getTypeByName(service, prop.typeName.value))
+      getTypeByName(service, method.returns?.value.typeName.value)
+        ?.properties.filter((prop) => prop.value.kind === 'ComplexValue')
+        .map((prop) => getTypeByName(service, prop.value.typeName.value))
         .filter((type): type is Type => !!type)
         .find((type) => {
           const hasPreviousPage = type.properties.find(
             (prop) =>
               camel(prop.name.value) === 'hasPreviousPage' &&
-              prop.isPrimitive &&
-              prop.typeName.value === 'boolean',
+              prop.value.kind === 'PrimitiveValue' &&
+              prop.value.typeName.value === 'boolean',
           );
           if (!hasPreviousPage) return false;
 
           const hasNextPage = type.properties.find(
             (prop) =>
               camel(prop.name.value) === 'hasNextPage' &&
-              prop.isPrimitive &&
-              prop.typeName.value === 'boolean',
+              prop.value.kind === 'PrimitiveValue' &&
+              prop.value.typeName.value === 'boolean',
           );
           if (!hasNextPage) return false;
 
           const startCursor = type.properties.find(
             (prop) =>
               camel(prop.name.value) === 'startCursor' &&
-              prop.isPrimitive &&
-              prop.typeName.value === 'string',
+              prop.value.kind === 'PrimitiveValue' &&
+              prop.value.typeName.value === 'string',
           );
           if (!startCursor) return false;
 
           const endCursor = type.properties.find(
             (prop) =>
               camel(prop.name.value) === 'endCursor' &&
-              prop.isPrimitive &&
-              prop.typeName.value === 'string',
+              prop.value.kind === 'PrimitiveValue' &&
+              prop.value.typeName.value === 'string',
           );
           return !!endCursor;
         });
 
     if (!first() || !after() || !last() || !before() || !pageInfo()) {
+      const { range, sourceIndex } = decodeRange(method.loc);
       return {
         code: 'basketry/relay-pagination',
         message: `Method "${method.name.value}" must define optional relay pagination parameters and return a "page info" object.`,
-        range: decodeRange(method.loc),
+        range,
         severity: parseSeverity(options?.severity),
-        sourcePath: service.sourcePath,
+        sourcePath: service.sourcePaths[sourceIndex],
         link: 'https://github.com/basketry/rules#pagination',
       };
     }
