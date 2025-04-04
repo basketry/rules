@@ -82,8 +82,8 @@ By default, violations of these rules will be displayed as errors. This may be o
 
 | Rule                                    |                                                                                                                                                                                                                                                        |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `@basketry/rules/lib/offset-pagination` | Requires methods that return arrays define `offset` and `limit` paremters                                                                                                                                                                              |
-| `@basketry/rules/lib/relay-pagination`  | Requires methods that return arrays define [Relay-style pagination paremters](https://relay.dev/graphql/connections.htm#sec-Arguments) and also return a ["page info"](https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo.Fields) object |
+| `@basketry/rules/lib/offset-pagination` | Requires methods that return arrays define `offset` and `limit` parameters                                                                                                                                                                              |
+| `@basketry/rules/lib/relay-pagination`  | Requires methods that return arrays define [Relay-style pagination parameters](https://relay.dev/graphql/connections.htm#sec-Arguments) and also return a ["page info"](https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo.Fields) object |
 
 ### Options
 
