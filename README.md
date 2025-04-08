@@ -268,6 +268,32 @@ Warning: changing the casing for enum values, paths, query parameters, and prope
 
 Also note that various Generators may emit code that is idiomatic to a particular language regardless of these casing rules; however, all generated code MUST send and receive values in the specified casing when communicating over service boundaries and/or respect the casing requirements of the protocol with which they do so.
 
+## JSON:API Error
+
+| Rule                                 |                                                                                                                                                |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@basketry/rules/lib/json-api-error` | Requires that an "Error" type be defined that conforms to the [JSON:API Error Object](https://jsonapi.org/format/#error-objects) specification |
+
+### Options
+
+By default, violations of this rule will be displayed as errors. This may be overridden with the `severity` option.
+
+By default, this requires strict conformity to the JSON:API Error Object spec. When in strict mode, `status` must be a string value if defined and `code` cannot be defined as an `enum`. When `strict` is explicitly set to `false` (`true` by default), then `status` can be a numeric type, and `code` can be a string enum type.
+
+```json
+{
+  "rules": [
+    {
+      "rule": "@basketry/rules/lib/json-api-error",
+      "options": {
+        "severity": "warning",
+        "strict": false
+      }
+    }
+  ]
+}
+```
+
 ---
 
 Generated with [generator-ts-console](https://www.npmjs.com/package/generator-ts-console)
