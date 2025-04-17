@@ -181,6 +181,57 @@ By default, violations of these rules will be displayed as errors. This may be o
 }
 ```
 
+## Object Bodies
+
+| Rule                                       |                                                                             |
+| ------------------------------------------ | --------------------------------------------------------------------------- |
+| `@basketry/rules/lib/object-request-body`  | Requires that request bodies (if defined) be objects or unions of objects.  |
+| `@basketry/rules/lib/object-response-body` | Requires that response bodies (if defined) be objects or unions of objects. |
+| `@basketry/rules/lib/object-body`          | Combines all of the other object body rules.                                |
+
+### Options
+
+By default, violations of these rules will be displayed as errors. This may be overridden with the `severity` option.
+
+```json
+{
+  "rules": [
+    {
+      "rule": "@basketry/rules/lib/object-body",
+      "options": { "severity": "warning" }
+    }
+  ]
+}
+```
+
+## No Disallowed HTTP Bodies
+
+The HTTP/1.1 specification (RFC 7231) either prohibits bodies or does not define body behavior for certain HTTP methods. In these cases, certain systems may ignore, reject, or fail if a body is provided. The following rules prohibit bodies from being defined for those HTTP methods.
+
+| Rule                                          |                                                              |
+| --------------------------------------------- | ------------------------------------------------------------ |
+| `@basketry/rules/lib/no-http-delete-body`     | Prohibits HTTP DELETE methods from defining a request body.  |
+| `@basketry/rules/lib/no-http-get-body`        | Prohibits HTTP GET methods from defining a request body.     |
+| `@basketry/rules/lib/no-http-head-body`       | Prohibits HTTP HEAD methods from defining a request body.    |
+| `@basketry/rules/lib/no-http-options-body`    | Prohibits HTTP OPTIONS methods from defining a request body. |
+| `@basketry/rules/lib/no-http-trace-body`      | Prohibits HTTP TRACE methods from defining a request body.   |
+| `@basketry/rules/lib/no-disallowed-http-body` | Combines all of the other disallowed HTTP body rules.        |
+
+### Options
+
+By default, violations of these rules will be displayed as errors. This may be overridden with the `severity` option.
+
+```json
+{
+  "rules": [
+    {
+      "rule": "@basketry/rules/lib/no-disallowed-http-body",
+      "options": { "severity": "warning" }
+    }
+  ]
+}
+```
+
 ## Pluralization
 
 | Rule                                          |                                                                                                    |
