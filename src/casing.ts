@@ -183,6 +183,25 @@ const casingRule: Rule = (service, options) => {
         });
       }
     }
+
+    for (const type of service.types) {
+      if (!type.mapProperties?.requiredKeys.length) continue;
+
+      for (const requiredKey of type.mapProperties.requiredKeys) {
+        const casing = parseCasing(options?.property);
+        const correct = applyCasing(requiredKey.value, casing);
+        if (requiredKey.value !== correct) {
+          violations.push({
+            code: 'basketry/property-casing',
+            message: `Property name "${requiredKey.value}" must be ${casing} cased: "${correct}"`,
+            range: decodeRange(requiredKey.loc),
+            severity: parseSeverity(options?.severity),
+            sourcePath: service.sourcePath,
+            link,
+          });
+        }
+      }
+    }
   }
 
   if (options?.type) {
