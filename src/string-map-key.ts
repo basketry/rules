@@ -13,26 +13,32 @@ const stringMapKeys: Rule = (service, options) => {
     const { mapProperties } = type;
     if (!mapProperties) continue;
 
-    if (mapProperties.key.isArray) {
+    if (mapProperties.key.value.isArray) {
+      const { range, sourceIndex } = decodeRange(
+        mapProperties.key.loc ?? mapProperties.loc ?? type.name.loc ?? type.loc,
+      );
       violations.push({
         code: 'basketry/string-map-key',
         message: `Map key must not be an array.`,
-        range: decodeRange(mapProperties.key.loc),
+        range,
         severity: parseSeverity(options?.severity),
-        sourcePath: service.sourcePath,
+        sourcePath: service.sourcePaths[sourceIndex],
       });
     }
 
     if (
-      !mapProperties.key.isPrimitive ||
-      mapProperties.key.typeName.value !== 'string'
+      mapProperties.key.value.kind === 'ComplexValue' ||
+      mapProperties.key.value.typeName.value !== 'string'
     ) {
+      const { range, sourceIndex } = decodeRange(
+        mapProperties.key.loc ?? mapProperties.loc ?? type.name.loc ?? type.loc,
+      );
       violations.push({
         code: 'basketry/string-map-key',
         message: `Map keys must be a string.`,
-        range: decodeRange(mapProperties.key.loc),
+        range,
         severity: parseSeverity(options?.severity),
-        sourcePath: service.sourcePath,
+        sourcePath: service.sourcePaths[sourceIndex],
       });
     }
   }

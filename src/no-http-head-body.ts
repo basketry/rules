@@ -6,14 +6,18 @@ const noHttpHeadBodyRule = parameterRule(
     if (!httpParameter) return;
     if (!httpMethod) return;
     if (httpMethod.verb.value !== 'head') return;
-    if (httpParameter.in.value !== 'body') return;
+    if (httpParameter.location.value !== 'body') return;
+
+    const { range, sourceIndex } = decodeRange(
+      parameter.name.loc ?? parameter.loc,
+    );
 
     return {
       code: 'basketry/no-http-head-body',
       message: `HTTP HEAD method "${method.name.value}" must not define a body parameter.`,
-      range: decodeRange(parameter.loc),
+      range,
       severity: parseSeverity(options?.severity),
-      sourcePath: service.sourcePath,
+      sourcePath: service.sourcePaths[sourceIndex],
       link: 'https://github.com/basketry/rules#no-http-head-body',
     };
   },

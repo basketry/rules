@@ -203,12 +203,13 @@ const casingRule: Rule = (service, options) => {
         const casing = parseCasing(options?.property);
         const correct = applyCasing(requiredKey.value, casing);
         if (requiredKey.value !== correct) {
+          const { range, sourceIndex } = decodeRange(requiredKey.loc);
           violations.push({
             code: 'basketry/property-casing',
             message: `Property name "${requiredKey.value}" must be ${casing} cased: "${correct}"`,
-            range: decodeRange(requiredKey.loc),
+            range,
             severity: parseSeverity(options?.severity),
-            sourcePath: service.sourcePath,
+            sourcePath: service.sourcePaths[sourceIndex],
             link,
           });
         }

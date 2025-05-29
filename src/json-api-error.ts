@@ -22,12 +22,13 @@ const jsonApiErrorRule: Rule = (service, options) => {
     (type) => snake(type.name.value) === 'error',
   );
   if (!error) {
+    const { range, sourceIndex } = decodeRange(service.loc);
     violations.push({
       code,
       message: 'Service must define an `error` type.',
       severity,
-      sourcePath: service.sourcePath,
-      range: decodeRange(service.loc),
+      sourcePath: service.sourcePaths[sourceIndex],
+      range,
       link,
     });
     return violations;
@@ -45,60 +46,66 @@ const jsonApiErrorRule: Rule = (service, options) => {
   ): void {
     const prop = getProperty(type, path);
     if (prop) {
-      if (opt?.required && !isRequired(prop)) {
+      if (opt?.required && !isRequired(prop.value)) {
+        const { range, sourceIndex } = decodeRange(prop.name.loc ?? prop.loc);
         violations.push({
           code,
           message: `Property \`${path}\` must be required.`,
           severity,
-          sourcePath: service.sourcePath,
-          range: decodeRange(prop.loc),
+          sourcePath: service.sourcePaths[sourceIndex],
+          range,
           link,
         });
-        return;
-      }
-
-      if (prop.isArray && !opt?.allowArray) {
+      } else if (prop.value.isArray && !opt?.allowArray) {
+        const { range, sourceIndex } = decodeRange(
+          prop.value.isArray.loc ?? prop.name.loc ?? prop.loc,
+        );
         violations.push({
           code,
           message: `Property \`${path}\` must not be an array.`,
           severity,
-          sourcePath: service.sourcePath,
-          range: decodeRange(prop.loc),
+          sourcePath: service.sourcePaths[sourceIndex],
+          range,
           link,
         });
-        return;
+      } else {
+        const isString =
+          prop.value.kind === 'PrimitiveValue' &&
+          prop.value.typeName.value === 'string';
+        const isNumeric =
+          prop.value.kind === 'PrimitiveValue' &&
+          (prop.value.typeName.value === 'double' ||
+            prop.value.typeName.value === 'float' ||
+            prop.value.typeName.value === 'integer' ||
+            prop.value.typeName.value === 'long' ||
+            prop.value.typeName.value === 'number');
+        if (isString) return;
+        if (isNumeric && opt?.allowNumeric) return;
+        const isEnum = !!getEnumByName(service, prop.value.typeName.value);
+        if (isEnum && opt?.allowEnums) return;
+
+        const { range, sourceIndex } = decodeRange(
+          prop.value.typeName.loc ?? prop.name.loc ?? prop.loc,
+        );
+        violations.push({
+          code,
+          message: `Property \`${path}\` must be a string${
+            opt?.allowEnums ? ' or enum' : ''
+          }${opt?.allowNumeric ? ' or numeric type' : ''}.`,
+          severity,
+          sourcePath: service.sourcePaths[sourceIndex],
+          range,
+          link,
+        });
       }
-
-      const isString = prop.isPrimitive && prop.typeName.value === 'string';
-      const isNumeric =
-        prop.isPrimitive &&
-        (prop.typeName.value === 'double' ||
-          prop.typeName.value === 'float' ||
-          prop.typeName.value === 'integer' ||
-          prop.typeName.value === 'long' ||
-          prop.typeName.value === 'number');
-      if (isString) return;
-      if (isNumeric && opt?.allowNumeric) return;
-      const isEnum = !!getEnumByName(service, prop.typeName.value);
-      if (isEnum && opt?.allowEnums) return;
-
-      violations.push({
-        code,
-        message: `Property \`${path}\` must be a string${
-          opt?.allowEnums ? ' or enum' : ''
-        }${opt?.allowNumeric ? ' or numeric type' : ''}.`,
-        severity,
-        sourcePath: service.sourcePath,
-        range: decodeRange(prop.typeName.loc),
-        link,
-      });
     } else if (opt?.required) {
+      const { range, sourceIndex } = decodeRange(type.name.loc ?? type.loc);
       violations.push({
         code,
         message: `Property \`${path}\` must be defined.`,
         severity,
-        sourcePath: service.sourcePath,
-        range: decodeRange(type.loc),
+        sourcePath: service.sourcePaths[sourceIndex],
+        range,
         link,
       });
     }
@@ -108,8 +115,8 @@ const jsonApiErrorRule: Rule = (service, options) => {
     if (!type) return undefined;
     return getTypeByName(
       service,
-      type?.properties.find((p) => snake(p.name.value) === snake(prop))
-        ?.typeName.value,
+      type?.properties.find((p) => snake(p.name.value) === snake(prop))?.value
+        .typeName.value,
     );
   }
 
@@ -122,7 +129,7 @@ const jsonApiErrorRule: Rule = (service, options) => {
       );
       if (!prop) return undefined;
 
-      currentType = getTypeByName(service, prop.typeName.value);
+      currentType = getTypeByName(service, prop.value.typeName.value);
     }
     return prop;
   }
@@ -170,19 +177,22 @@ const jsonApiErrorRule: Rule = (service, options) => {
   function checkLink(lnk: Property | undefined): void {
     if (!lnk) return;
 
-    if (lnk.isPrimitive) {
-      if (lnk.typeName.value !== 'string') {
+    if (lnk.value.kind === 'PrimitiveValue') {
+      if (lnk.value.typeName.value !== 'string') {
+        const { range, sourceIndex } = decodeRange(
+          lnk.value.typeName.loc ?? lnk.name.loc ?? lnk.loc,
+        );
         violations.push({
           code,
           message: `Property \`${lnk.name.value}\` must be a string or an object.`,
           severity,
-          sourcePath: service.sourcePath,
-          range: decodeRange(lnk.typeName.loc),
+          sourcePath: service.sourcePaths[sourceIndex],
+          range,
           link,
         });
       }
     } else {
-      const type = getTypeByName(service, lnk.typeName.value);
+      const type = getTypeByName(service, lnk.value.typeName.value);
       if (!type) return;
 
       check(type, 'href', { required: true });
@@ -212,6 +222,8 @@ const jsonApiErrorRule: Rule = (service, options) => {
     // Check for non-standard properties
     for (const prop of type.properties) {
       if (!knownProperties.has(snake(prop.name.value))) {
+        const { range, sourceIndex } = decodeRange(prop.name.loc ?? prop.loc);
+
         violations.push({
           code,
           message: `Property \`${
@@ -222,8 +234,8 @@ const jsonApiErrorRule: Rule = (service, options) => {
               ', ',
             )}. Define non-standard meta-information in \`error.meta\`.`,
           severity,
-          sourcePath: service.sourcePath,
-          range: decodeRange(prop.name.loc),
+          sourcePath: service.sourcePaths[sourceIndex],
+          range,
           link,
         });
       }

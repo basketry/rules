@@ -6,20 +6,19 @@ const noFreeFormObjects = typeRule(({ service, type, options }) => {
   if (!mapProperties) return;
 
   if (
-    mapProperties.value.isPrimitive &&
-    mapProperties.value.typeName.value === 'untyped'
+    mapProperties.value.value.kind === 'PrimitiveValue' &&
+    mapProperties.value.value.typeName.value === 'untyped'
   ) {
+    const { range, sourceIndex } = decodeRange(
+      mapProperties.value.loc ?? mapProperties.loc ?? type.name.loc ?? type.loc,
+    );
+
     return {
       code: 'basketry/no-free-form-objects',
       message: 'Map type must explicitly define a value schema.',
-      range: decodeRange(
-        mapProperties.value.loc ??
-          mapProperties.loc ??
-          type.name.loc ??
-          type.loc,
-      ),
+      range,
       severity: parseSeverity(options?.severity, 'error'),
-      sourcePath: service.sourcePath,
+      sourcePath: service.sourcePaths[sourceIndex],
     };
   }
 

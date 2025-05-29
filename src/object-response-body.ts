@@ -7,21 +7,25 @@ import {
 import { parseSeverity } from './utils';
 
 const objectResponseBodyRule = methodRule(({ method, service, options }) => {
-  const returnType = method.returnType;
-  if (!returnType) return;
+  const returnValue = method.returns;
+  if (!returnValue) return;
 
-  const type = getTypeByName(service, returnType.typeName.value);
-  if (type && !returnType.isArray) return;
+  const type = getTypeByName(service, returnValue.value.typeName.value);
+  if (type && !returnValue.value.isArray) return;
 
-  const union = getUnionByName(service, returnType.typeName.value);
-  if (union && union.members.every((m) => !m.isArray && !m.isPrimitive)) return;
+  const union = getUnionByName(service, returnValue.value.typeName.value);
+  if (union?.members.every((m) => !m.isArray && m.kind === 'ComplexValue')) {
+    return;
+  }
+
+  const { range, sourceIndex } = decodeRange(method.name.loc ?? method.loc);
 
   return {
     code: 'basketry/object-response-body',
     message: `Method "${method.name.value}" must return an object or a union of objects.`,
-    range: decodeRange(method.loc),
+    range,
     severity: parseSeverity(options?.severity),
-    sourcePath: service.sourcePath,
+    sourcePath: service.sourcePaths[sourceIndex],
     link: 'https://github.com/basketry/rules#object-response-body',
   };
 });
