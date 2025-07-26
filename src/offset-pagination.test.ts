@@ -393,12 +393,14 @@ const paginationParams = (): Parameter[] => [
     name: build.stringLiteral('offset'),
     value: build.primitiveValue({
       typeName: build.primitiveLiteral('integer'),
+      isOptional: build.trueLiteral(true),
     }),
   }),
   build.parameter({
     name: build.stringLiteral('limit'),
     value: build.primitiveValue({
       typeName: build.primitiveLiteral('integer'),
+      isOptional: build.trueLiteral(true),
     }),
   }),
 ];
