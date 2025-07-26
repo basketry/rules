@@ -330,24 +330,28 @@ const paginationParams = (): Parameter[] => [
     name: build.stringLiteral('first'),
     value: build.primitiveValue({
       typeName: build.primitiveLiteral('integer'),
+      isOptional: build.trueLiteral(true),
     }),
   }),
   build.parameter({
     name: build.stringLiteral('after'),
     value: build.primitiveValue({
       typeName: build.primitiveLiteral('string'),
+      isOptional: build.trueLiteral(true),
     }),
   }),
   build.parameter({
     name: build.stringLiteral('last'),
     value: build.primitiveValue({
       typeName: build.primitiveLiteral('integer'),
+      isOptional: build.trueLiteral(true),
     }),
   }),
   build.parameter({
     name: build.stringLiteral('before'),
     value: build.primitiveValue({
       typeName: build.primitiveLiteral('string'),
+      isOptional: build.trueLiteral(true),
     }),
   }),
 ];
