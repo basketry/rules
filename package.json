@@ -3,6 +3,9 @@
   "version": "0.2.1",
   "description": "Common rules for building Basketry pipelines",
   "main": "./lib/index.js",
+  "bin": {
+    "basketry-rules": "./lib/rpc.js"
+  },
   "scripts": {
     "test": "jest --passWithNoTests",
     "clean": "run-s -s clean:*",
@@ -12,6 +15,7 @@
     "start": "node ./lib/index.js",
     "prebuild": "run-s -s clean lint",
     "build": "tsc",
+    "postbuild": "chmod +x ./lib/rpc.js",
     "lint:eslint": "eslint src/**/*.*",
     "fix:eslint": "eslint --fix src/**/*.*",
     "lint:prettier": "prettier -c .",
